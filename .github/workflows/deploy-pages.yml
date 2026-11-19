@@ -4,12 +4,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      preview_ref:
-        description: "Branch untuk membuat pratinjau sementara di /preview/"
-        required: false
-        type: string
-        default: ""
 
 permissions:
   contents: read
@@ -44,25 +38,20 @@ jobs:
       - name: Add main SPA fallback
         run: cp dist/index.html dist/404.html
       - name: Checkout preview branch
-        if: ${{ inputs.preview_ref != '' }}
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.preview_ref }}
+          ref: fix/exam-internal-pwa-fullscreen
           path: preview-src
       - name: Prepare preview base path
-        if: ${{ inputs.preview_ref != '' }}
         run: |
           sed -i "s|'/Simpatik-for-Students/'|'/Simpatik-for-Students/preview/'|" preview-src/vite.config.ts
       - name: Install preview dependencies
-        if: ${{ inputs.preview_ref != '' }}
         working-directory: preview-src
         run: npm install --legacy-peer-deps --no-audit --no-fund --fetch-retries=2 --fetch-timeout=120000
       - name: Build preview app
-        if: ${{ inputs.preview_ref != '' }}
         working-directory: preview-src
         run: npm run build
       - name: Add preview under /preview/
-        if: ${{ inputs.preview_ref != '' }}
         run: |
           mkdir -p dist/preview
           cp -R preview-src/dist/. dist/preview/
