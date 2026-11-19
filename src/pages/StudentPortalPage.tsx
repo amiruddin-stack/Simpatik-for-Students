@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  ArrowLeft, ArrowRight, Bell, BookOpen, CalendarDays, ClipboardCheck,
-  GraduationCap, KeyRound, LogOut, ShieldCheck, UserRound,
-  UserSquare2
+  ArrowLeft, ArrowRight, Bell, BookOpen, ClipboardCheck,
+  GraduationCap, KeyRound, LogOut, ShieldCheck, UserRound, UserSquare2,
+  Sparkles, NotebookPen, Wallet, ChartNoAxesCombined
 } from 'lucide-react';
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInAnonymously, signInWithCustomToken, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -286,6 +286,7 @@ export const StudentPortalPage: React.FC = () => {
           <ExamPage studentMode />
         </section>
       );
+      if (activeMenu === 'dashboard') return null;
       return (
         <section className="rounded-2xl border border-[#D9EEE2] bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3"><div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#E3F7EC] text-[#087F49]"><ShieldCheck size={25}/></div><div><h2 className="font-extrabold text-slate-800">Keamanan Akun</h2><p className="text-xs text-slate-500">Kelola sesi masuk pada perangkat ini.</p></div></div>
@@ -298,19 +299,37 @@ export const StudentPortalPage: React.FC = () => {
     return (
       <main className="min-h-screen bg-[#F7FBF8]">
         <div className="mx-auto max-w-7xl px-3 py-4 sm:px-5 sm:py-6">
-          <div className="mb-3 flex items-center justify-between gap-3 px-1">
-            <div className="min-w-0"><p className="truncate text-sm font-extrabold text-slate-800 sm:text-base">{student.name}</p><p className="text-[11px] font-medium text-slate-500">Kelas {student.className}</p></div>
-            <button type="button" aria-label="Notifikasi" title="Notifikasi" className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#D9EEE2] bg-white text-[#087F49] shadow-sm"><Bell size={19}/><span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white"/></button>
-          </div>
+          {activeMenu === 'dashboard' ? (
+            <>
+              <header className="relative mb-5 flex h-12 items-center justify-between px-1">
+                <img src={`${import.meta.env.BASE_URL}logo-alwasi.png`} alt="Logo SMP Islam Al-Wasi’" className="h-10 w-10 object-contain"/>
+                <h1 className="absolute left-1/2 -translate-x-1/2 text-base font-extrabold text-[#087F49]">Home</h1>
+                <button type="button" aria-label="Notifikasi" title="Notifikasi" className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#087F49]">
+                  <Bell size={23} strokeWidth={2}/>
+                  <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white"/>
+                </button>
+              </header>
+              <section className="mb-4 px-1">
+                <p className="text-xs font-semibold text-slate-800">Assalamu'alaikum</p>
+                <h2 className="text-[25px] font-extrabold leading-tight tracking-tight text-slate-800">{student.name}</h2>
+              </section>
+            </>
+          ) : (
+            <div className="mb-3 flex items-center justify-between gap-3 px-1">
+              <div className="min-w-0"><p className="truncate text-sm font-extrabold text-slate-800 sm:text-base">{student.name}</p><p className="text-[11px] font-medium text-slate-500">Kelas {student.className}</p></div>
+              <button type="button" aria-label="Notifikasi" title="Notifikasi" className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#D9EEE2] bg-white text-[#087F49] shadow-sm"><Bell size={19}/><span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white"/></button>
+            </div>
+          )}
           {activeMenu === 'dashboard' && (
-          <header className="relative overflow-hidden rounded-[26px] bg-gradient-to-br from-[#0B8F4D] via-[#087F49] to-[#06663A] px-5 py-6 text-white shadow-lg sm:px-7 sm:py-7">
+          <header className="relative isolate mb-6 flex min-h-[150px] items-center overflow-hidden rounded-[26px] bg-gradient-to-br from-[#0B8F4D] via-[#087F49] to-[#06663A] px-4 py-4 text-white shadow-lg sm:min-h-[168px] sm:px-5">
             <div className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full border-[24px] border-white/10"/>
             <div className="pointer-events-none absolute -bottom-24 right-24 h-44 w-44 rounded-full bg-white/5"/>
-            <img src={`${import.meta.env.BASE_URL}images/Desain%20tanpa%20judul_20261118_110522_0000.png`} alt="" aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 z-0 h-full max-h-[155px] w-[44%] object-contain object-right drop-shadow-[0_8px_8px_rgba(0,0,0,0.12)] sm:max-h-[250px] sm:w-[42%]"/>
-            <div className="relative z-10 max-w-[58%] sm:max-w-[62%]">
-              <h1 className="whitespace-nowrap text-[clamp(0.7rem,3.6vw,1.5rem)] font-black leading-tight tracking-wide">SIMPATIK FOR STUDENTS</h1>
-              <p className="mt-1 text-sm font-bold text-white/90 sm:text-base">SMP Islam Al-Wasi'</p>
-              <p className="mt-4 text-xs font-semibold text-white/80">Qurani, Ramah Anak dan Berkarakter</p>
+            <img src={`${import.meta.env.BASE_URL}images/Desain%20tanpa%20judul_20261118_110522_0000.png`} alt="Ilustrasi siswa menggunakan teknologi pembelajaran" className="pointer-events-none absolute inset-y-0 right-0 z-0 h-full w-[41%] object-contain object-right drop-shadow-[0_8px_8px_rgba(0,0,0,0.12)]"/>
+            <div className="relative z-10 w-[68%] min-w-0">
+              <p className="text-[clamp(12px,3.2vw,16px)] font-bold leading-tight">Welcome!</p>
+              <h2 className="mt-1 whitespace-nowrap text-[clamp(10px,3.3vw,17px)] font-black leading-tight tracking-tight">SIMPATIK FOR STUDENTS</h2>
+              <p className="mt-1 whitespace-nowrap text-[clamp(8px,2.25vw,11px)] font-medium leading-tight text-white/95">Sistem Informasi Akademik dan Asesmen</p>
+              <p className="mt-0.5 whitespace-nowrap text-[clamp(8px,2.25vw,11px)] font-medium leading-tight text-white/95">SMP Islam Al-Wasi'</p>
             </div>
           </header>
           )}
@@ -322,21 +341,30 @@ export const StudentPortalPage: React.FC = () => {
             </header>
           )}
           {activeMenu === 'dashboard' && (
-          <section aria-label="Ringkasan perkembangan siswa" className="mt-3 grid grid-cols-1 gap-3 min-[420px]:grid-cols-3">
-            {[
-              { label: 'Perkembangan Akademik', icon: GraduationCap, detail: 'Ringkasan nilai belajar' },
-              { label: 'Persentase Kehadiran', icon: CalendarDays, detail: 'Rekap kehadiran siswa' },
-              { label: 'Bacaan Sholat', icon: BookOpen, detail: 'Progres penguasaan bacaan' },
-            ].map(item => { const Icon = item.icon; return (
-              <article key={item.label} className="rounded-2xl border border-[#D9EEE2] bg-white p-3 shadow-sm min-[420px]:p-3.5">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#E3F7EC] text-[#087F49]"><Icon size={18}/></span>
-                  <h2 className="min-w-0 text-xs font-extrabold leading-4 text-slate-700">{item.label}</h2>
-                </div>
-                <p className="mt-3 text-2xl font-black tracking-tight text-slate-400">—</p>
-                <p className="mt-1 text-[10px] leading-4 text-slate-500">Data belum tersedia</p>
-              </article>
-            ); })}
+            <button type="button" onClick={() => setActiveMenu('ujian-form')} className="mb-5 flex min-h-[64px] w-full items-center gap-3 rounded-[22px] border-2 border-[#168052] bg-white px-4 text-left text-slate-800 transition hover:bg-[#F5FBF7]">
+              <ClipboardCheck size={29} className="shrink-0 text-[#168052]"/>
+              <span className="flex-1 text-base font-extrabold">Lihat dan kerjakan Ujian</span>
+              <ArrowRight size={27} className="shrink-0 text-black"/>
+            </button>
+          )}
+          {activeMenu === 'dashboard' && (
+          <section aria-label="Informasiku" className="mt-1">
+            <h2 className="mb-2 px-1 text-base font-extrabold text-slate-800">Informasiku</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: 'Persentase Kehadiran', icon: ChartNoAxesCombined, value: '—', note: 'Data belum tersedia' },
+                { label: 'Islamic Life Skill', icon: Sparkles, value: '—', note: 'Data belum tersedia' },
+                { label: 'Jurnal', icon: NotebookPen, value: '—', note: 'Data belum tersedia' },
+                { label: 'Pembayaran', icon: Wallet, value: '—', note: 'Data belum tersedia' },
+              ].map(item => { const Icon = item.icon; return (
+                <article key={item.label} className="flex min-h-[154px] flex-col items-center justify-center rounded-[25px] border border-[#168052] bg-white px-3 py-4 text-center shadow-[0_2px_8px_rgba(8,127,73,0.04)] first:bg-[#D0F1DC]">
+                  <span className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-[#E3F7EC] text-[#087F49]"><Icon size={20}/></span>
+                  <h3 className="text-sm font-extrabold leading-5 text-slate-800">{item.label}</h3>
+                  <p className="mt-2 text-xl font-black tracking-tight text-[#087F49]">{item.value}</p>
+                  <p className="mt-0.5 text-[9px] leading-3 text-slate-500">{item.note}</p>
+                </article>
+              ); })}
+            </div>
           </section>
           )}
           <section className="mt-4 min-w-0 pb-24">
