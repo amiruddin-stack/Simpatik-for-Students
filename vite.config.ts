@@ -12,7 +12,11 @@ export default defineConfig(() => ({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: false,
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg'],
+      includeAssets: [
+        'icons/simpatik-for-students.svg',
+        'icons/simpatik-for-students-192.png',
+        'icons/simpatik-for-students-512.png',
+      ],
       workbox: {
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest,woff,woff2}'],
