@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  ArrowLeft, ArrowRight, Bell, BookOpen, CalendarCheck, ClipboardCheck,
+  ArrowLeft, ArrowRight, Bell, BookOpen, ClipboardCheck,
   GraduationCap, KeyRound, LogOut, ShieldCheck, UserRound, UserSquare2,
   Sparkles, NotebookPen, Wallet, ChartNoAxesCombined
 } from 'lucide-react';
@@ -341,14 +341,21 @@ export const StudentPortalPage: React.FC = () => {
             </header>
           )}
           {activeMenu === 'dashboard' && (
+            <button type="button" onClick={() => setActiveMenu('ujian-form')} className="mb-5 flex min-h-[64px] w-full items-center gap-3 rounded-[22px] border-2 border-[#168052] bg-white px-4 text-left text-slate-800 transition hover:bg-[#F5FBF7]">
+              <ClipboardCheck size={29} className="shrink-0 text-[#168052]"/>
+              <span className="flex-1 text-base font-extrabold">Lihat dan kerjakan Ujian</span>
+              <ArrowRight size={27} className="shrink-0 text-black"/>
+            </button>
+          )}
+          {activeMenu === 'dashboard' && (
           <section aria-label="Informasiku" className="mt-1">
             <h2 className="mb-2 px-1 text-base font-extrabold text-slate-800">Informasiku</h2>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { label: 'Persentase Kehadiran', icon: ChartNoAxesCombined, value: '—', note: 'Data kehadiran SIMPATIK' },
-                { label: 'Islamic Life Skill', icon: Sparkles, value: '—', note: 'Data capaian SIMPATIK' },
-                { label: 'Jurnal', icon: NotebookPen, value: '—', note: 'Data jurnal SIMPATIK' },
-                { label: 'Pembayaran', icon: Wallet, value: '—', note: 'Data pembayaran SIMPATIK' },
+                { label: 'Persentase Kehadiran', icon: ChartNoAxesCombined, value: '—', note: 'Data belum tersedia' },
+                { label: 'Islamic Life Skill', icon: Sparkles, value: '—', note: 'Data belum tersedia' },
+                { label: 'Jurnal', icon: NotebookPen, value: '—', note: 'Data belum tersedia' },
+                { label: 'Pembayaran', icon: Wallet, value: '—', note: 'Data belum tersedia' },
               ].map(item => { const Icon = item.icon; return (
                 <article key={item.label} className="flex min-h-[154px] flex-col items-center justify-center rounded-[25px] border border-[#168052] bg-white px-3 py-4 text-center shadow-[0_2px_8px_rgba(8,127,73,0.04)] first:bg-[#D0F1DC]">
                   <span className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-[#E3F7EC] text-[#087F49]"><Icon size={20}/></span>
@@ -359,13 +366,6 @@ export const StudentPortalPage: React.FC = () => {
               ); })}
             </div>
           </section>
-          )}
-          {activeMenu === 'dashboard' && (
-            <button type="button" onClick={() => setActiveMenu('ujian-form')} className="mb-5 flex min-h-[64px] w-full items-center gap-3 rounded-[22px] border-2 border-[#168052] bg-white px-4 text-left text-slate-800 transition hover:bg-[#F5FBF7]">
-              <ClipboardCheck size={29} className="shrink-0 text-[#168052]"/>
-              <span className="flex-1 text-base font-extrabold">Lihat dan kerjakan Ujian</span>
-              <ArrowRight size={27} className="shrink-0 text-black"/>
-            </button>
           )}
           <section className="mt-4 min-w-0 pb-24">
             {renderContent()}
