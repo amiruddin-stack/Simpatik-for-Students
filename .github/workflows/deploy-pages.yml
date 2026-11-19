@@ -40,7 +40,7 @@ jobs:
       - name: Checkout preview branch
         uses: actions/checkout@v4
         with:
-          ref: fix/exam-internal-pwa-fullscreen
+          ref: feat/student-home-redesign
           path: preview-src
       - name: Prepare preview base path
         run: |
