@@ -1,14 +1,14 @@
 {
-  "id": "/",
-  "name": "SIMPATIK | SMP Islam Al-Wasi’",
-  "short_name": "SIMPATIK",
-  "description": "Sistem Informasi Manajemen Pendidikan dan Akademik Terpadu, Interaktif dan Kolaboratif SMP Islam Al-Wasi’.",
+  "id": "/Simpatik-for-Students/",
+  "name": "SIMPATIK for Students | SMP Islam Al-Wasi’",
+  "short_name": "SIMPATIK Siswa",
+  "description": "Portal khusus siswa SMP Islam Al-Wasi’.",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone",
   "orientation": "any",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/Simpatik-for-Students/",
+  "scope": "/Simpatik-for-Students/",
   "icons": [
     {
       "src": "./pwa-192x192.png",
