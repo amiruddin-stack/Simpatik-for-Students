@@ -18,6 +18,7 @@ export default defineConfig(() => ({
         'icons/simpatik-for-students-512.png',
       ],
       workbox: {
+        cacheId: 'simpatik-students-ujian-v2',
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest,woff,woff2}'],
       },
