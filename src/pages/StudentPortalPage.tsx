@@ -58,6 +58,16 @@ export const StudentPortalPage: React.FC = () => {
   };
 
   useEffect(() => {
+    const syncExamRoute = () => {
+      const currentExamId = new URLSearchParams(window.location.search).get('examRoom') || '';
+      setExamRoomId(currentExamId);
+      if (!currentExamId) setActiveMenu('dashboard');
+    };
+    window.addEventListener('popstate', syncExamRoute);
+    return () => window.removeEventListener('popstate', syncExamRoute);
+  }, []);
+
+  useEffect(() => {
     let alive = true;
     let unsubscribe = () => {};
     const restoreSession = async () => {
