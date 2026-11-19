@@ -197,7 +197,7 @@ export const StudentGoogleFormExams: React.FC<{
     return () => window.removeEventListener('storage', syncAttempt);
   }, [examRoom, storageKey]);
 
-  const startExam = (exam: StudentFormExam | null = selected) => {
+  const startExam = (exam: StudentFormExam | null | undefined = selected) => {
     if (!exam) return;
     const examStorageKey = attemptStorageKey(exam.id, studentId, nisn);
     const existingAttempt = readAttempt(examStorageKey);
@@ -221,7 +221,7 @@ export const StudentGoogleFormExams: React.FC<{
     window.dispatchEvent(new Event('simpatik-exam-start'));
   };
 
-  const continueExam = (exam: StudentFormExam | null = selected) => {
+  const continueExam = (exam: StudentFormExam | null | undefined = selected) => {
     if (!exam) return;
     const examAttempt = readAttempt(attemptStorageKey(exam.id, studentId, nisn));
     if (!examAttempt || examAttempt.completedAt) return;
