@@ -1,8 +1,8 @@
-name: Deploy SIPADU PWA to GitHub Pages
+name: Deploy SIMPATIK for Students to GitHub Pages
 
 on:
   push:
-    branches: [main, deploy/github-pages]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-deploy-v2
+  group: student-pages-deploy
   cancel-in-progress: true
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
           enablement: true
       - name: Install dependencies
         run: npm install --legacy-peer-deps --no-audit --no-fund --fetch-retries=2 --fetch-timeout=120000
-      - name: Build PWA
+      - name: Build student app
         run: npm run build
       - name: Add SPA fallback
         run: cp dist/index.html dist/404.html
