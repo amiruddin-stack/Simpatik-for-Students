@@ -26,7 +26,7 @@ const menuTitles: Record<StudentMenu, string> = {
   dashboard: 'Dashboard',
   profil: 'Profil', biodata: 'Biodata Siswa', tahsin: 'Tahsin',
   'bacaan-sholat': 'Bacaan Sholat', 'ujian-semester': 'Ujian Semester',
-  'ujian-sekolah': 'Ujian Sekolah', 'ujian-form': 'Ujian Form', keamanan: 'Keamanan'
+  'ujian-sekolah': 'Ujian Sekolah', 'ujian-form': 'Ujian', keamanan: 'Keamanan'
 };
 
 export const StudentPortalPage: React.FC = () => {
@@ -327,9 +327,9 @@ export const StudentPortalPage: React.FC = () => {
             <img src={`${import.meta.env.BASE_URL}images/Desain%20tanpa%20judul_20261118_110522_0000.png`} alt="Ilustrasi siswa menggunakan teknologi pembelajaran" className="pointer-events-none absolute inset-y-0 right-0 z-0 h-full w-[41%] object-contain object-right drop-shadow-[0_8px_8px_rgba(0,0,0,0.12)]"/>
             <div className="relative z-10 w-[68%] min-w-0">
               <p className="text-[clamp(12px,3.2vw,16px)] font-bold leading-tight">Welcome!</p>
-              <h2 className="mt-1 whitespace-nowrap text-[clamp(10px,3.3vw,17px)] font-black leading-tight tracking-tight">SIMPATIK FOR STUDENTS</h2>
-              <p className="mt-1 whitespace-nowrap text-[clamp(8px,2.25vw,11px)] font-medium leading-tight text-white/95">Sistem Informasi Akademik dan Asesmen</p>
-              <p className="mt-0.5 whitespace-nowrap text-[clamp(8px,2.25vw,11px)] font-medium leading-tight text-white/95">SMP Islam Al-Wasi'</p>
+              <h2 className="mt-1 whitespace-nowrap text-[clamp(14px,4vw,21px)] font-black leading-tight tracking-tight">SIMPATIK FOR STUDENTS</h2>
+              <p className="mt-1 whitespace-nowrap text-[clamp(9px,2.6vw,12px)] font-medium leading-tight text-white/95">Sistem Informasi Akademik dan Asesmen</p>
+              <p className="mt-0.5 whitespace-nowrap text-[clamp(9px,2.6vw,12px)] font-medium leading-tight text-white/95">SMP Islam Al-Wasi'</p>
             </div>
           </header>
           )}
@@ -341,10 +341,10 @@ export const StudentPortalPage: React.FC = () => {
             </header>
           )}
           {activeMenu === 'dashboard' && (
-            <button type="button" onClick={() => setActiveMenu('ujian-form')} className="mb-5 flex min-h-[64px] w-full items-center gap-3 rounded-[22px] border-2 border-[#168052] bg-white px-4 text-left text-slate-800 transition hover:bg-[#F5FBF7]">
+            <button type="button" onClick={() => setActiveMenu('ujian-form')} className="mb-5 flex min-h-[64px] w-full items-center gap-3 rounded-[22px] border border-[#B7E8CD] bg-white px-4 text-left text-slate-800 shadow-sm transition hover:border-[#8ACDA8] hover:bg-[#F8FCF9]">
               <ClipboardCheck size={29} className="shrink-0 text-[#168052]"/>
               <span className="flex-1 text-base font-extrabold">Lihat dan kerjakan Ujian</span>
-              <ArrowRight size={27} className="shrink-0 text-black"/>
+              <ArrowRight size={27} className="shrink-0 text-[#168052]"/>
             </button>
           )}
           {activeMenu === 'dashboard' && (
@@ -357,7 +357,7 @@ export const StudentPortalPage: React.FC = () => {
                 { label: 'Jurnal', icon: NotebookPen, value: '—', note: 'Data belum tersedia' },
                 { label: 'Pembayaran', icon: Wallet, value: '—', note: 'Data belum tersedia' },
               ].map(item => { const Icon = item.icon; return (
-                <article key={item.label} className="flex min-h-[154px] flex-col items-center justify-center rounded-[25px] border border-[#168052] bg-white px-3 py-4 text-center shadow-[0_2px_8px_rgba(8,127,73,0.04)] first:bg-[#D0F1DC]">
+                <article key={item.label} className="flex min-h-[154px] flex-col items-center justify-center rounded-[25px] border border-[#B7E8CD] bg-[#D0F1DC] px-3 py-4 text-center shadow-[0_2px_8px_rgba(8,127,73,0.04)]">
                   <span className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-[#E3F7EC] text-[#087F49]"><Icon size={20}/></span>
                   <h3 className="text-sm font-extrabold leading-5 text-slate-800">{item.label}</h3>
                   <p className="mt-2 text-xl font-black tracking-tight text-[#087F49]">{item.value}</p>
