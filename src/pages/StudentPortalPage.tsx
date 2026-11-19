@@ -381,7 +381,7 @@ export const StudentPortalPage: React.FC = () => {
               { id: 'profil', label: 'Profil', icon: UserRound },
               { id: 'keamanan', label: 'Akun', icon: ShieldCheck },
             ].map(item => { const Icon = item.icon; const selected = activeMenu === item.id; return (
-              <button key={item.id} type="button" onClick={() => selectMenu(item.id as StudentMenu)} aria-current={selected ? 'page' : undefined} className={'flex min-h-[54px] flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[11px] font-extrabold transition '+(selected ? 'bg-[#E3F7EC] text-[#087F49]' : 'text-slate-500 hover:bg-[#F5FBF7]')}>
+              <button key={item.id} type="button" onClick={() => selectMenu(item.id as StudentMenu)} aria-current={selected ? 'page' : undefined} className={'flex min-h-[54px] flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[11px] font-extrabold transition '+(selected ? (item.id === 'ujian-form' ? 'bg-[#DCFCE7] text-[#166534] shadow-sm ring-1 ring-[#BBF7D0]' : 'bg-[#E3F7EC] text-[#087F49]') : 'text-slate-500 hover:bg-[#F5FBF7]')}>
                 <Icon size={20} strokeWidth={selected ? 2.5 : 2}/><span>{item.label}</span>
               </button>
             ); })}
