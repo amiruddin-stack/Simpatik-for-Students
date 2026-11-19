@@ -38,7 +38,24 @@ export const StudentPortalPage: React.FC = () => {
   const [studentSession, setStudentSession] = useState(false);
   const [sessionChecking, setSessionChecking] = useState(true);
   const [activeMenu, setActiveMenu] = useState<StudentMenu>('dashboard');
-  const examRoomId = new URLSearchParams(window.location.search).get('examRoom') || '';
+  const [examRoomId, setExamRoomId] = useState(() => new URLSearchParams(window.location.search).get('examRoom') || '');
+  const enterExamRoom = (id: string) => {
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.set('student', '1');
+    nextUrl.searchParams.set('examRoom', id);
+    nextUrl.searchParams.delete('page');
+    window.history.pushState({}, '', nextUrl);
+    setExamRoomId(id);
+  };
+  const exitExamRoom = () => {
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.delete('examRoom');
+    nextUrl.searchParams.delete('page');
+    nextUrl.searchParams.set('student', '1');
+    window.history.pushState({}, '', nextUrl);
+    setExamRoomId('');
+    setActiveMenu('dashboard');
+  };
 
   useEffect(() => {
     let alive = true;
@@ -212,7 +229,7 @@ export const StudentPortalPage: React.FC = () => {
   if (studentSession && student) {
     if (sessionChecking) return <main className="flex min-h-screen items-center justify-center bg-[#F7FBF8] p-5 text-center text-sm font-semibold text-slate-500">Memulihkan sesi siswa…</main>;
 
-  if (examRoomId) return <StudentGoogleFormExams className={student.className} nisn={student.nisn} studentId={student.id} studentName={student.name} examRoomId={examRoomId} />;
+  if (examRoomId) return <StudentGoogleFormExams className={student.className} nisn={student.nisn} studentId={student.id} studentName={student.name} examRoomId={examRoomId} onEnterExam={enterExamRoom} onExitExam={exitExamRoom} />;
     const selectMenu = (id: StudentMenu) => { setActiveMenu(id); };
     const activeLabel = menuTitles[activeMenu];
     const renderContent = () => {
@@ -252,7 +269,7 @@ export const StudentPortalPage: React.FC = () => {
           <p className="mt-2 max-w-sm text-sm text-slate-500">Materi {activeLabel.toLowerCase()} sedang disiapkan.</p>
         </section>
       );
-      if (activeMenu === 'ujian-form') return <StudentGoogleFormExams className={student.className} nisn={student.nisn} studentId={student.id} studentName={student.name} />;
+      if (activeMenu === 'ujian-form') return <StudentGoogleFormExams className={student.className} nisn={student.nisn} studentId={student.id} studentName={student.name} onEnterExam={enterExamRoom} onExitExam={exitExamRoom} />;
       if (activeMenu === 'ujian-semester' || activeMenu === 'ujian-sekolah') return (
         <section className="rounded-2xl border border-[#D9EEE2] bg-white p-3 shadow-sm sm:p-5">
           <div className="mb-4"><h2 className="font-extrabold text-slate-800">{activeLabel}</h2><p className="mt-1 text-xs text-slate-500">Pilih ujian yang tersedia untuk kelas {student.className}.</p></div>
