@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
-import { CalendarClock, CheckCircle2, FileText, ShieldAlert, Timer } from 'lucide-react';
+import { CalendarDays, CheckCircle2, CircleAlert, ClipboardList, Clock3, FileText, RefreshCw, ShieldAlert } from 'lucide-react';
 import { db } from '../firebase/config';
 import { getClassLevel } from '../lib/classes';
 
@@ -17,6 +17,8 @@ type StudentFormExam = {
   endAt?: string;
   enableCountdown?: boolean;
   duration?: number;
+  questionCount?: number;
+  totalQuestions?: number;
   enablePenalty?: boolean;
   status: string;
 };
@@ -97,6 +99,9 @@ export const StudentGoogleFormExams: React.FC<{
   const [attempt, setAttempt] = useState<ExamAttempt | null>(null);
   const [now, setNow] = useState(Date.now());
   const [openError, setOpenError] = useState('');
+  const [loadError, setLoadError] = useState('');
+  const [retryCount, setRetryCount] = useState(0);
+  const [activeTab, setActiveTab] = useState<'active' | 'upcoming' | 'finished'>('active');
   const [confirmStep, setConfirmStep] = useState<0 | 1 | 2>(0);
   const [timeWarningOpen, setTimeWarningOpen] = useState(false);
   const timeWarningExamRef = useRef('');
@@ -114,23 +119,22 @@ export const StudentGoogleFormExams: React.FC<{
 
   useEffect(() => {
     if (!classLevel) { setLoading(false); return; }
+    setLoading(true);
+    setLoadError('');
     const q = query(collection(db, 'googleFormExams'), where('classLevel', '==', classLevel), where('status', '==', 'Aktif'));
     const stop = onSnapshot(q, snapshot => {
-      const nowValue = Date.now();
-      const rows = snapshot.docs.map(item => ({ id: item.id, ...item.data() } as StudentFormExam))
-        .filter(item => {
-          const scheduleOn = item.enableSchedule ?? Boolean(item.startAt || item.endAt);
-          return !scheduleOn || ((!item.startAt || new Date(item.startAt).getTime() <= nowValue) && (!item.endAt || new Date(item.endAt).getTime() >= nowValue));
-        });
+      const rows = snapshot.docs.map(item => ({ id: item.id, ...item.data() } as StudentFormExam));
       setExams(rows);
       if (examRoomId && rows.some(item => item.id === examRoomId)) setSelectedId(examRoomId);
       setLoading(false);
+      setLoadError('');
     }, error => {
       console.error('Gagal memuat daftar Ujian Form siswa:', error);
+      setLoadError('Daftar ujian belum dapat dimuat. Periksa koneksi internet, lalu coba lagi.');
       setLoading(false);
     });
     return stop;
-  }, [classLevel, examRoomId]);
+  }, [classLevel, examRoomId, retryCount]);
 
   useEffect(() => {
     setAttempt(selected && storageKey ? readAttempt(storageKey) : null);
@@ -193,27 +197,39 @@ export const StudentGoogleFormExams: React.FC<{
     return () => window.removeEventListener('storage', syncAttempt);
   }, [examRoom, storageKey]);
 
-  const startExam = () => {
-    if (!selected || !storageKey || attempt) return;
+  const startExam = (exam: StudentFormExam | null = selected) => {
+    if (!exam) return;
+    const examStorageKey = attemptStorageKey(exam.id, studentId, nisn);
+    const existingAttempt = readAttempt(examStorageKey);
+    if (existingAttempt) {
+      setSelectedId(exam.id);
+      setAttempt(existingAttempt);
+      return;
+    }
     const next: ExamAttempt = { startedAt: Date.now(), lockUntil: 0, violations: 0, lastExitAt: 0 };
     try {
-      localStorage.setItem(storageKey, JSON.stringify(next));
-      localStorage.setItem(activeKey, JSON.stringify({ examId: selected.id, title: selected.title, startedAt: next.startedAt }));
+      localStorage.setItem(examStorageKey, JSON.stringify(next));
+      localStorage.setItem(activeKey, JSON.stringify({ examId: exam.id, title: exam.title, startedAt: next.startedAt }));
     } catch (error) {
       console.error('Gagal menyimpan awal ujian:', error);
     }
+    setSelectedId(exam.id);
     setAttempt(next);
     setNow(Date.now());
     setOpenError('');
-    onEnterExam(selected.id);
+    onEnterExam(exam.id);
     window.dispatchEvent(new Event('simpatik-exam-start'));
   };
 
-  const continueExam = () => {
-    if (!selected || !attempt) return;
-    try { localStorage.setItem('simpatik_exam_resume_request_' + selected.id, String(Date.now())); } catch (error) { console.error('Gagal menandai lanjut ujian:', error); }
+  const continueExam = (exam: StudentFormExam | null = selected) => {
+    if (!exam) return;
+    const examAttempt = readAttempt(attemptStorageKey(exam.id, studentId, nisn));
+    if (!examAttempt || examAttempt.completedAt) return;
+    try { localStorage.setItem('simpatik_exam_resume_request_' + exam.id, String(Date.now())); } catch (error) { console.error('Gagal menandai lanjut ujian:', error); }
+    setSelectedId(exam.id);
+    setAttempt(examAttempt);
     setOpenError('');
-    onEnterExam(selected.id);
+    onEnterExam(exam.id);
   };
 
   const finishExam = () => {
@@ -264,18 +280,155 @@ export const StudentGoogleFormExams: React.FC<{
 
   }
 
+  const getExamAttempt = (exam: StudentFormExam) => readAttempt(attemptStorageKey(exam.id, studentId, nisn));
+  const getScheduleStart = (exam: StudentFormExam) => exam.startAt ? new Date(exam.startAt).getTime() : 0;
+  const getScheduleEnd = (exam: StudentFormExam) => exam.endAt ? new Date(exam.endAt).getTime() : 0;
+  const upcomingExams = exams.filter(exam => {
+    const startedAttempt = getExamAttempt(exam);
+    return !startedAttempt?.completedAt && Boolean(exam.startAt) && getScheduleStart(exam) > now;
+  });
+  const finishedExams = exams.filter(exam => Boolean(getExamAttempt(exam)?.completedAt));
+  const activeExams = exams.filter(exam => {
+    const savedAttempt = getExamAttempt(exam);
+    const end = getScheduleEnd(exam);
+    return !savedAttempt?.completedAt && getScheduleStart(exam) <= now && (!end || end >= now);
+  });
+  const visibleExams = activeTab === 'active' ? activeExams : activeTab === 'upcoming' ? upcomingExams : finishedExams;
+  const formatDate = (value: string | number, options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' }) =>
+    new Intl.DateTimeFormat('id-ID', options).format(new Date(value));
+  const formatDeadline = (value?: string) => value ? formatDate(value, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Tidak ditentukan';
+  const formatDateParts = (value: string) => ({
+    day: formatDate(value, { day: '2-digit' }),
+    month: formatDate(value, { month: 'short' }).replace('.', '').toUpperCase(),
+  });
+
   return (
-    <div className="space-y-4">
-      <div className="rounded-2xl border border-[#D5EADB] bg-[#F2FBF5] p-4"><h2 className="font-extrabold text-slate-800">Ujian G-Form</h2><p className="mt-1 text-xs leading-5 text-slate-500">Pilih ujian untuk kelas {className}. Tekan Mulai Ujian saat sudah siap.</p></div>
-      {loading ? <div className="rounded-xl border border-slate-200 bg-white p-5 text-center text-sm text-slate-500">Memuat ujian…</div> : exams.length === 0 ? <div className="rounded-xl border border-dashed border-slate-300 bg-white p-7 text-center"><FileText size={28} className="mx-auto text-slate-300"/><p className="mt-2 text-sm font-bold text-slate-600">Belum ada ujian aktif</p><p className="mt-1 text-xs text-slate-400">Ujian dari guru akan muncul di sini sesuai kelas.</p></div> : (
-        <>
-          <div className="grid gap-3 sm:grid-cols-2">{exams.map(exam => <button key={exam.id} type="button" onClick={() => setSelectedId(exam.id)} className={'rounded-xl border p-4 text-left transition ' + (selectedId === exam.id ? 'border-[#0B8F4D] bg-[#F2FBF5] ring-2 ring-[#D5EADB]' : 'border-slate-200 bg-white hover:border-emerald-300')}><span className="text-sm font-extrabold text-slate-800">{exam.title}</span><span className="mt-1 block text-xs text-slate-500">{exam.subject} · {exam.duration || 60} menit</span>{exam.endAt && <span className="mt-2 flex items-center gap-1 text-[11px] text-slate-400"><CalendarClock size={13}/> Batas: {new Date(exam.endAt).toLocaleString('id-ID')}</span>}</button>)}</div>
-          {selected && !selectedFormUrl && <div role="alert" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs leading-5 text-amber-800">Tautan Google Form belum valid. Guru perlu memeriksa tautan ujian di SIMPATIK.</div>}
-          {selected && selectedFormUrl && !started && <section className="rounded-2xl border border-[#D5EADB] bg-white p-4 shadow-sm"><h3 className="text-sm font-extrabold text-slate-800">{selected.title}</h3><p className="mt-1 text-xs text-slate-500">{selected.subject} · {selected.examType || 'Ujian Form'}</p><p className="mt-3 text-xs leading-5 text-slate-600">Saat menekan Mulai Ujian, halaman akan berpindah ke ruang ujian di dalam aplikasi SIMPATIK. Waktu ujian dimulai pada saat itu.</p><button type="button" onClick={startExam} className="mt-4 w-full rounded-xl bg-[#087F49] px-4 py-3 text-sm font-extrabold text-white">Mulai Ujian</button>{openError && <p role="alert" className="mt-3 rounded-lg bg-amber-50 p-3 text-xs font-semibold text-amber-800">{openError}</p>}</section>}
-          {selected && started && <section className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4"><div className="flex items-center gap-2 font-extrabold text-emerald-800"><CheckCircle2 size={18}/> Ujian sedang berlangsung</div><p className="mt-2 text-xs leading-5 text-emerald-800">Lanjutkan ujian di ruang ujian aplikasi. Jawaban dan waktu ujian tetap tersimpan; tidak membuat sesi baru. Pelanggaran tercatat: {attempt?.violations || 0}.</p><button type="button" onClick={continueExam} className="mt-3 w-full rounded-xl bg-[#087F49] px-4 py-3 text-sm font-extrabold text-white">Lanjutkan Ujian</button>{openError && <p role="alert" className="mt-2 rounded-lg bg-amber-50 p-3 text-xs font-semibold text-amber-800">{openError}</p>}</section>}
-        </>
+    <div className="min-w-0 space-y-5 pb-[calc(88px+env(safe-area-inset-bottom))] text-[#0F172A]">
+      <header className="space-y-1">
+        <h1 className="text-[22px] font-bold leading-7 tracking-tight text-[#0F172A]">Ujian</h1>
+        <p className="text-xs text-[#64748B]">Daftar ujian untuk kelas {className}</p>
+      </header>
+
+      <div role="tablist" aria-label="Status ujian" className="grid grid-cols-3 rounded-2xl bg-[#E2E8F0] p-1">
+        {[
+          { id: 'active' as const, label: 'Aktif', count: activeExams.length },
+          { id: 'upcoming' as const, label: 'Mendatang' },
+          { id: 'finished' as const, label: 'Selesai' },
+        ].map(tab => (
+          <button key={tab.id} type="button" role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)}
+            className={'min-h-11 rounded-xl px-2 text-xs font-bold transition-colors duration-200 ' + (activeTab === tab.id ? 'bg-white text-[#166534] shadow-sm' : 'text-[#64748B] hover:text-[#334155]')}>
+            {tab.label}{tab.count !== undefined ? ' (' + tab.count + ')' : ''}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div className="space-y-3" aria-label="Memuat daftar ujian" aria-busy="true">
+          {[0, 1].map(item => <div key={item} className="animate-pulse rounded-[20px] border border-slate-200 bg-white p-4">
+            <div className="h-5 w-32 rounded-full bg-slate-200"/>
+            <div className="mt-4 h-6 w-3/4 rounded-lg bg-slate-200"/>
+            <div className="mt-3 h-4 w-1/2 rounded-lg bg-slate-100"/>
+            <div className="mt-5 grid grid-cols-3 gap-2">{[0, 1, 2].map(cell => <div key={cell} className="h-14 rounded-xl bg-slate-100"/>)}</div>
+            <div className="mt-4 h-12 rounded-xl bg-slate-200"/>
+          </div>)}
+        </div>
+      ) : loadError ? (
+        <section role="alert" className="rounded-2xl border border-rose-100 bg-white p-6 text-center shadow-sm">
+          <CircleAlert size={28} className="mx-auto text-rose-500"/>
+          <p className="mt-3 text-sm font-semibold text-[#334155]">{loadError}</p>
+          <button type="button" onClick={() => { setLoading(true); setRetryCount(value => value + 1); }} className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#166534] px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#15803D]">
+            <RefreshCw size={16}/> Coba lagi
+          </button>
+        </section>
+      ) : visibleExams.length === 0 ? (
+        <section className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-[#CBD5E1] bg-white px-5 py-8 text-center">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#DCFCE7] text-[#166534]">
+            {activeTab === 'active' ? <ClipboardList size={22}/> : activeTab === 'upcoming' ? <CalendarDays size={22}/> : <CheckCircle2 size={22}/>}
+          </span>
+          <p className="mt-3 text-sm font-semibold text-[#334155]">
+            {activeTab === 'active' ? 'Tidak ada ujian aktif saat ini' : activeTab === 'upcoming' ? 'Tidak ada ujian mendatang' : 'Belum ada ujian yang selesai'}
+          </p>
+        </section>
+      ) : activeTab === 'active' ? (
+        <div className="space-y-4">
+          {activeExams.map(exam => {
+            const savedAttempt = getExamAttempt(exam);
+            const inProgress = Boolean(savedAttempt && !savedAttempt.completedAt);
+            const questionCount = Number(exam.questionCount ?? exam.totalQuestions ?? 0);
+            const examUrl = embedUrl(exam.formUrl, nisn, studentId, studentName, className);
+            return (
+              <article key={exam.id} className="overflow-hidden rounded-[20px] bg-gradient-to-br from-[#166534] to-[#15803D] p-4 text-white shadow-[0_12px_26px_rgba(22,101,52,0.16)]">
+                <div className="inline-flex rounded-full bg-[#FBBF24] px-3 py-1 text-[11px] font-bold text-[#422006]">Sedang berlangsung</div>
+                <h2 className="mt-3 text-xl font-bold leading-6 text-white">{exam.title}</h2>
+                <p className="mt-1 text-xs text-white/85">{exam.subject || 'Ujian'} · Kelas {exam.className}</p>
+                <div className="mt-4 grid grid-cols-3 gap-2">
+                  <div className="rounded-xl bg-white/12 px-2 py-3 text-center">
+                    <ClipboardList size={17} className="mx-auto text-white/85"/>
+                    <p className="mt-1 text-sm font-bold text-white">{questionCount > 0 ? questionCount : 'Tidak tersedia'}</p>
+                    <p className="mt-0.5 text-[10px] text-white/75">Jumlah soal</p>
+                  </div>
+                  <div className="rounded-xl bg-white/12 px-2 py-3 text-center">
+                    <Clock3 size={17} className="mx-auto text-white/85"/>
+                    <p className="mt-1 text-sm font-bold text-white">{exam.duration || 60} menit</p>
+                    <p className="mt-0.5 text-[10px] text-white/75">Durasi</p>
+                  </div>
+                  <div className="rounded-xl bg-white/12 px-2 py-3 text-center">
+                    <CalendarDays size={17} className="mx-auto text-white/85"/>
+                    <p className="mt-1 text-xs font-bold text-white">{formatDeadline(exam.endAt)}</p>
+                    <p className="mt-0.5 text-[10px] text-white/75">Batas akhir</p>
+                  </div>
+                </div>
+                {!examUrl ? (
+                  <div role="alert" className="mt-4 rounded-xl bg-white/15 px-3 py-3 text-xs leading-5 text-white">Tautan ujian belum valid. Hubungi guru untuk memeriksanya.</div>
+                ) : (
+                  <button type="button" onClick={() => inProgress ? continueExam(exam) : startExam(exam)} className="mt-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#166534] transition-colors duration-200 hover:bg-[#F0FDF4]">
+                    {inProgress ? 'Lanjutkan Ujian' : 'Mulai Ujian'}
+                  </button>
+                )}
+                {openError && selectedId === exam.id && <p role="alert" className="mt-3 rounded-lg bg-white/15 p-3 text-xs font-semibold text-white">{openError}</p>}
+              </article>
+            );
+          })}
+        </div>
+      ) : activeTab === 'upcoming' ? (
+        <div className="space-y-3">
+          {upcomingExams.map(exam => {
+            const dateParts = formatDateParts(exam.startAt!);
+            return (
+              <article key={exam.id} className="flex gap-3 rounded-2xl border border-[#E2E8F0] bg-white p-3 shadow-sm">
+                <div className="flex w-[62px] shrink-0 flex-col items-center justify-center rounded-xl bg-[#DCFCE7] px-2 py-3 text-[#166534]">
+                  <span className="text-2xl font-bold leading-7">{dateParts.day}</span>
+                  <span className="mt-0.5 text-[10px] font-bold tracking-wide">{dateParts.month}</span>
+                </div>
+                <div className="min-w-0 flex-1 py-1">
+                  <h2 className="text-sm font-semibold leading-5 text-[#0F172A]">{exam.title}</h2>
+                  <p className="mt-1 text-xs text-[#64748B]">{formatDate(exam.startAt!, { hour: '2-digit', minute: '2-digit' })} · {exam.duration || 60} menit</p>
+                  <p className="mt-1 text-xs text-[#64748B]">{exam.subject || 'Ujian'} · Kelas {exam.className}</p>
+                  <span className="mt-2 inline-flex rounded-full bg-[#F1F5F9] px-2.5 py-1 text-[10px] font-semibold text-[#64748B]">Terjadwal</span>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {finishedExams.map(exam => {
+            const savedAttempt = getExamAttempt(exam);
+            return (
+              <article key={exam.id} className="flex items-center gap-3 rounded-2xl border border-[#E2E8F0] bg-white p-4 shadow-sm">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#DCFCE7] text-[#166534]"><CheckCircle2 size={21}/></span>
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-sm font-semibold leading-5 text-[#0F172A]">{exam.title}</h2>
+                  <p className="mt-1 text-xs text-[#64748B]">{savedAttempt?.completedAt ? 'Selesai ' + formatDate(savedAttempt.completedAt) : 'Selesai'}</p>
+                </div>
+                <span className="shrink-0 rounded-full bg-[#DCFCE7] px-3 py-1.5 text-xs font-bold text-[#166534]">Menunggu nilai</span>
+              </article>
+            );
+          })}
+        </div>
       )}
-      <p className="text-[11px] leading-5 text-slate-400">Status dan waktu ujian disimpan di perangkat siswa. Penalti bergantung pada kemampuan browser mendeteksi perpindahan tab/aplikasi. Google Forms berasal dari layanan Google sehingga SIMPATIK tidak dapat membaca secara langsung apakah tombol Kirim sudah berhasil ditekan.</p>
+
+      <p className="text-[11px] leading-5 text-[#64748B]">Status dan waktu ujian disimpan di perangkat siswa. Penalti bergantung pada kemampuan browser mendeteksi perpindahan tab/aplikasi. Google Forms berasal dari layanan Google sehingga SIMPATIK tidak dapat membaca secara langsung apakah tombol Kirim sudah berhasil ditekan.</p>
     </div>
   );
 };
