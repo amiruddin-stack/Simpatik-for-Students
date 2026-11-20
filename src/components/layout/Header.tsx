@@ -54,7 +54,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onNavigate, embedded 
     setAcademicOpen(false);
     setMobileMenuOpen(false);
   };
-  const navClass = (tab: NavTab) => `flex min-h-11 shrink-0 items-center gap-1 rounded-xl px-2.5 text-sm font-semibold transition-colors ${activeTab === tab ? 'bg-[#ddf7e9] text-[#087f49]' : 'text-slate-700 hover:bg-[#eaf9f0] hover:text-[#087f49]'}`;
+  const navClass = (tab: NavTab) => `flex min-h-11 shrink-0 items-center gap-1 rounded-xl px-2.5 text-sm font-semibold transition-colors ${activeTab === tab ? 'bg-[#dde7f7] text-[#08387f]' : 'text-slate-700 hover:bg-[#eaf0f9] hover:text-[#08387f]'}`;
   const isAcademicActive = academicItems.some(([tab]) => tab === activeTab);
 
   return (
@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onNavigate, embedded 
               const rect = academicRef.current?.getBoundingClientRect();
               if (rect) setAcademicPosition({ left: Math.max(8, Math.min(rect.left, window.innerWidth - 250)), top: rect.bottom + 8 });
               setAcademicOpen(value => !value);
-            }} aria-expanded={academicOpen} className={`flex min-h-11 items-center gap-1 rounded-xl px-2.5 text-sm font-semibold transition-colors ${isAcademicActive || academicOpen ? 'bg-[#e3f7ec] text-[#0b8f4d]' : 'text-slate-700 hover:bg-[#f2faf5] hover:text-[#0b8f4d]'}`}>
+            }} aria-expanded={academicOpen} className={`flex min-h-11 items-center gap-1 rounded-xl px-2.5 text-sm font-semibold transition-colors ${isAcademicActive || academicOpen ? 'bg-[#e3ebf7] text-[#0b408f]' : 'text-slate-700 hover:bg-[#f2f5fa] hover:text-[#0b408f]'}`}>
               <ClipboardList size={15}/>Akademik<ChevronDown size={14}/>
             </button>
           </div>
@@ -89,15 +89,15 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onNavigate, embedded 
           {!embedded && (firebaseUser && !firebaseUser.isAnonymous && currentUser ? (
             <button type="button" onClick={() => void logout()} className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-50"><LogOut size={14}/>Keluar</button>
           ) : (
-            <button type="button" onClick={() => void loginWithGoogle()} disabled={loading} className="rounded-xl bg-[#18b66a] px-3 py-2 text-xs font-bold text-white hover:bg-[#0b9654] disabled:opacity-60">{loading ? 'Memeriksa…' : 'Login'}</button>
+            <button type="button" onClick={() => void loginWithGoogle()} disabled={loading} className="rounded-xl bg-[#1857b6] px-3 py-2 text-xs font-bold text-white hover:bg-[#0b4396] disabled:opacity-60">{loading ? 'Memeriksa…' : 'Login'}</button>
           ))}
-          <button type="button" onClick={() => setMobileMenuOpen(value => !value)} className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-[#087f49]" aria-label={mobileMenuOpen ? 'Tutup menu' : 'Buka menu'} aria-expanded={mobileMenuOpen}>{mobileMenuOpen ? <X size={20}/> : <Menu size={20}/>}</button>
+          <button type="button" onClick={() => setMobileMenuOpen(value => !value)} className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-[#08387f]" aria-label={mobileMenuOpen ? 'Tutup menu' : 'Buka menu'} aria-expanded={mobileMenuOpen}>{mobileMenuOpen ? <X size={20}/> : <Menu size={20}/>}</button>
         </div>
       </div>
 
       {academicOpen && (
-        <div ref={academicMenuRef} style={{ left: academicPosition.left, top: academicPosition.top }} className="fixed z-[10000] w-60 rounded-2xl border border-[#d5eadb] bg-white p-2 text-slate-700 shadow-xl">
-          {academicItems.map(([tab, label]) => <button key={tab} onClick={() => navigate(tab)} className={`block w-full rounded-xl px-3.5 py-2.5 text-left text-sm transition hover:bg-[#e3f7ec] ${activeTab === tab ? 'bg-[#e3f7ec] font-bold text-[#076b3a]' : ''}`}>{label}</button>)}
+        <div ref={academicMenuRef} style={{ left: academicPosition.left, top: academicPosition.top }} className="fixed z-[10000] w-60 rounded-2xl border border-[#d5ddea] bg-white p-2 text-slate-700 shadow-xl">
+          {academicItems.map(([tab, label]) => <button key={tab} onClick={() => navigate(tab)} className={`block w-full rounded-xl px-3.5 py-2.5 text-left text-sm transition hover:bg-[#e3ebf7] ${activeTab === tab ? 'bg-[#e3ebf7] font-bold text-[#072f6b]' : ''}`}>{label}</button>)}
         </div>
       )}
 
@@ -115,10 +115,10 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onNavigate, embedded 
               <button onClick={() => navigate('classes')} className={navClass('classes') + ' w-full'}><GraduationCap size={16}/>Kelas</button>
               <button onClick={() => navigate('subjects')} className={navClass('subjects') + ' w-full'}><BookOpen size={16}/>Mapel</button>
               <p className="px-3 pb-1 pt-4 text-[10px] font-bold uppercase tracking-wider text-slate-400">Akademik</p>
-              {academicItems.map(([tab, label]) => <button key={tab} onClick={() => navigate(tab)} className={`block w-full rounded-xl px-3.5 py-2.5 text-left text-sm font-semibold transition hover:bg-[#e3f7ec] ${activeTab === tab ? 'bg-[#e3f7ec] text-[#076b3a]' : 'text-slate-700'}`}>{label}</button>)}
+              {academicItems.map(([tab, label]) => <button key={tab} onClick={() => navigate(tab)} className={`block w-full rounded-xl px-3.5 py-2.5 text-left text-sm font-semibold transition hover:bg-[#e3ebf7] ${activeTab === tab ? 'bg-[#e3ebf7] text-[#072f6b]' : 'text-slate-700'}`}>{label}</button>)}
               <button onClick={() => navigate('ils')} className={navClass('ils') + ' w-full mt-2'}>ILS</button>
             </div>
-            <div className="mt-auto border-t border-[#e3f7ec] pt-4">
+            <div className="mt-auto border-t border-[#e3ebf7] pt-4">
               <p className="truncate text-xs font-bold text-slate-700">{currentUser?.displayName || 'Akun'}</p>
               <p className="truncate text-[10px] text-slate-400">{currentUser?.email || ''}</p>
               {firebaseUser && !firebaseUser.isAnonymous && currentUser && <button type="button" onClick={() => void logout()} className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 py-2.5 text-xs font-bold text-slate-600"><LogOut size={14}/>Keluar</button>}
