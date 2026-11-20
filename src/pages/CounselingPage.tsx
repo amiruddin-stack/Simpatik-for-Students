@@ -138,7 +138,7 @@ export const CounselingPage: React.FC = () => {
 
           <button
             onClick={handleOpenAdd}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white bg-[#076B3A] hover:bg-[#076B3A] rounded-lg transition-colors shadow-xs"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white bg-[#076b3a] hover:bg-[#076b3a] rounded-lg transition-colors shadow-xs"
           >
             
             <span>Tambah Sesi Konseling</span>
@@ -154,7 +154,7 @@ export const CounselingPage: React.FC = () => {
             <select
               value={selectedService}
               onChange={(e) => setSelectedService(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
             >
               <option value="Semua">Semua Bidang Layanan</option>
               {serviceTypes.map((st) => (
@@ -174,7 +174,7 @@ export const CounselingPage: React.FC = () => {
               placeholder="Cari..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
             />
           </div>
         </div>
@@ -211,7 +211,7 @@ export const CounselingPage: React.FC = () => {
                   <span
                     className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                       item.followUpStatus === 'Selesai'
-                        ? 'bg-[#E3F7EC] text-[#076B3A] border border-[#B7E8CD]'
+                        ? 'bg-[#e3f7ec] text-[#076b3a] border border-[#b7e8cd]'
                         : item.followUpStatus === 'Rujukan'
                         ? 'bg-purple-50 text-purple-800 border border-purple-200'
                         : 'bg-amber-50 text-amber-800 border border-amber-200'
@@ -303,7 +303,7 @@ export const CounselingPage: React.FC = () => {
                 <select
                   value={formData.studentId}
                   onChange={(e) => handleStudentSelect(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
                 >
                   {students.map((std) => (
                     <option key={std.id} value={std.id}>
@@ -323,7 +323,7 @@ export const CounselingPage: React.FC = () => {
                     required
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
                   />
                 </div>
                 <div>
@@ -335,7 +335,7 @@ export const CounselingPage: React.FC = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, serviceType: e.target.value as CounselingServiceType })
                     }
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
                   >
                     {serviceTypes.map((st) => (
                       <option key={st} value={st}>
@@ -356,7 +356,7 @@ export const CounselingPage: React.FC = () => {
                   placeholder="Uraikan kondisi atau keluhan yang dialami siswa..."
                   value={formData.issueSummary}
                   onChange={(e) => setFormData({ ...formData, issueSummary: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
                 />
               </div>
 
@@ -370,7 +370,7 @@ export const CounselingPage: React.FC = () => {
                   placeholder="Kesepakatan pembinaan atau target perubahan yang ditetapkan..."
                   value={formData.actionPlan}
                   onChange={(e) => setFormData({ ...formData, actionPlan: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
                 />
               </div>
 
@@ -387,7 +387,7 @@ export const CounselingPage: React.FC = () => {
                         followUpStatus: e.target.value as 'Proses' | 'Selesai' | 'Rujukan',
                       })
                     }
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
                   >
                     <option value="Proses">Sedang Berproses</option>
                     <option value="Selesai">Tuntas / Selesai</option>
@@ -403,7 +403,7 @@ export const CounselingPage: React.FC = () => {
                     placeholder="Catatan observasi..."
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
                   />
                 </div>
               </div>
@@ -418,7 +418,7 @@ export const CounselingPage: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 text-xs font-bold text-white bg-[#076B3A] hover:bg-[#076B3A] rounded-xl shadow-xs"
+                  className="px-5 py-2 text-xs font-bold text-white bg-[#076b3a] hover:bg-[#076b3a] rounded-xl shadow-xs"
                 >
                   Simpan Dokumen BK
                 </button>
