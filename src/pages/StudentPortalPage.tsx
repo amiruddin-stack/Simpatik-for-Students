@@ -392,51 +392,71 @@ export const StudentPortalPage: React.FC = () => {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[linear-gradient(145deg,#061b49_0%,#073b86_48%,#0878d1_100%)] px-5 py-8 text-white">
-      <div aria-hidden="true" className="pointer-events-none absolute -left-28 -top-32 h-96 w-96 rounded-full bg-cyan-300/25 blur-3xl"/>
-      <div aria-hidden="true" className="pointer-events-none absolute -bottom-36 -right-24 h-[28rem] w-[28rem] rounded-full bg-blue-300/25 blur-3xl"/>
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 via-white/5 to-transparent"/>
-      <div aria-hidden="true" className="pointer-events-none absolute -left-1/3 top-24 h-28 w-[160%] rotate-[-18deg] bg-gradient-to-r from-transparent via-white/10 to-transparent blur-xl"/>
+    <main className="simpatik-periodic-shine relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[linear-gradient(145deg,#08387f_0%,#1857b6_52%,#2767c8_100%)] px-5 py-8 text-white">
+      <style>{`
+        @keyframes simpatik-light-sweep {
+          0%, 82% { transform: translateX(-155%) skewX(-18deg); opacity: 0; }
+          84% { opacity: .0; }
+          86% { opacity: .48; }
+          92% { transform: translateX(255%) skewX(-18deg); opacity: .22; }
+          94%, 100% { transform: translateX(255%) skewX(-18deg); opacity: 0; }
+        }
+        .simpatik-periodic-shine::after {
+          content: "";
+          position: absolute;
+          z-index: 0;
+          inset: -25% auto -25% 0;
+          width: 42%;
+          pointer-events: none;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,.34), rgba(255,255,255,.08), transparent);
+          filter: blur(3px);
+          animation: simpatik-light-sweep 30s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .simpatik-periodic-shine::after { animation: none; }
+        }
+      `}</style>
+
       <section className="simpatik-enter relative z-10 mx-auto flex w-full max-w-md flex-col items-center text-center">
         <div className="relative mb-5 flex h-44 w-44 items-center justify-center sm:mb-6 sm:h-52 sm:w-52">
           <div aria-hidden="true" className="absolute inset-2 rounded-full bg-white/20 blur-2xl"/>
           <img src={`${import.meta.env.BASE_URL}logo-alwasi.png`} alt="Logo SMP Islam Al-Wasi’" className="relative h-full w-full object-contain drop-shadow-[0_12px_24px_rgba(0,12,48,0.35)]"/>
         </div>
-        <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-blue-100">SMP Islam Al-Wasi’</p>
+        <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#e8eff9]">SMP Islam Al-Wasi’</p>
         <h1 className="mt-2 text-4xl font-black tracking-[0.08em] text-white drop-shadow-lg sm:text-5xl">SIMPATIK</h1>
-        <p className="mt-2 text-sm font-bold tracking-wide text-cyan-100">FOR STUDENTS</p>
+        <p className="mt-2 text-sm font-bold tracking-wide text-[#d5e4fb]">FOR STUDENTS</p>
         <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-cyan-200 via-white to-cyan-200 shadow-[0_0_18px_rgba(255,255,255,0.75)]"/>
         <p className="mt-5 text-lg font-extrabold text-white">Selamat Datang</p>
-        <p className="mt-2 max-w-xs text-sm leading-6 text-blue-100">Portal siswa SMP Islam Al-Wasi’. Silakan pilih menu untuk melanjutkan.</p>
+        <p className="mt-2 max-w-xs text-sm leading-6 text-[#e8eff9]">Portal siswa SMP Islam Al-Wasi’. Silakan pilih menu untuk melanjutkan.</p>
 
         {view === 'home' && (
           <div className="mt-7 grid w-full gap-3">
-            <button type="button" onClick={() => { setMessage(''); setView('register'); }} className="flex w-full items-center justify-center gap-3 rounded-2xl border border-white/70 bg-white/10 px-5 py-4 text-sm font-extrabold text-white shadow-[0_10px_30px_rgba(0,16,56,0.2),inset_0_1px_0_rgba(255,255,255,0.35)] backdrop-blur-md transition hover:bg-white/20">
+            <button type="button" onClick={() => { setMessage(''); setView('register'); }} className="flex w-full items-center justify-center gap-3 rounded-2xl border border-white/80 bg-[#e8eff9] px-5 py-4 text-sm font-extrabold text-[#08387f] shadow-md transition hover:bg-white">
               <UserRound size={20}/> Mendaftar
             </button>
-            <button type="button" onClick={() => { setMessage(''); setView('login'); }} className="flex w-full items-center justify-center gap-3 rounded-2xl border border-white/80 bg-gradient-to-b from-white to-blue-50 px-5 py-4 text-sm font-extrabold text-[#08387f] shadow-[0_10px_30px_rgba(0,16,56,0.25),inset_0_1px_0_rgba(255,255,255,1)] transition hover:-translate-y-0.5">
+            <button type="button" onClick={() => { setMessage(''); setView('login'); }} className="flex w-full items-center justify-center gap-3 rounded-2xl border border-[#a6c2eb] bg-[#08387f] px-5 py-4 text-sm font-extrabold text-white shadow-md transition hover:bg-[#1857b6]">
               <KeyRound size={20}/> Masuk dengan NISN
             </button>
           </div>
         )}
 
         {view === 'login' && (
-          <div className="mt-7 w-full rounded-3xl border border-white/30 bg-white/10 p-5 text-left shadow-[0_16px_45px_rgba(0,16,56,0.22),inset_0_1px_0_rgba(255,255,255,0.25)] backdrop-blur-xl sm:p-6">
-            <button type="button" onClick={() => { setMessage(''); setView('home'); }} aria-label="Kembali" className="mb-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white"><ArrowLeft size={18}/></button>
-            <h2 className="text-lg font-extrabold text-white">Masuk SIMPATIK</h2>
-            <p className="mt-1 text-xs leading-5 text-blue-100">Masukkan NISN yang telah terdaftar dan disetujui admin.</p>
+          <div className="mt-7 w-full rounded-3xl border border-[#c4d5ef] bg-white p-5 text-left text-slate-800 shadow-[0_16px_40px_rgba(3,24,66,0.22)] sm:p-6">
+            <button type="button" onClick={() => { setMessage(''); setView('home'); }} aria-label="Kembali" className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-[#e8eff9] text-[#08387f]"><ArrowLeft size={18}/></button>
+            <h2 className="text-lg font-extrabold text-[#08387f]">Masuk SIMPATIK</h2>
+            <p className="mt-1 text-xs leading-5 text-slate-600">Masukkan NISN yang telah terdaftar dan disetujui admin.</p>
             <form onSubmit={loginStudent} className="mt-4 grid gap-3">
-              <label className="grid gap-1.5 text-sm font-bold text-white">NISN
+              <label className="grid gap-1.5 text-sm font-bold text-[#08387f]">NISN
                 <input value={nisn} onChange={e => setNisn(e.target.value.slice(0,30))} maxLength={30} required placeholder="Masukkan NISN" className="w-full rounded-xl border border-white/60 bg-white px-4 py-3 text-base font-semibold text-slate-800 outline-none placeholder:text-slate-400 focus:border-cyan-200 focus:ring-2 focus:ring-cyan-200/50"/>
               </label>
               {message && <p role="status" className="rounded-xl border border-amber-200/50 bg-amber-100/15 p-3 text-xs leading-5 text-amber-50">{message}</p>}
-              <button type="submit" disabled={busy} className="mt-1 rounded-xl bg-gradient-to-b from-white to-blue-50 px-4 py-3.5 font-extrabold text-[#08387f] shadow-lg transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60">{busy ? 'Memeriksa NISN…' : 'Masuk'}</button>
+              <button type="submit" disabled={busy} className="mt-1 rounded-xl bg-[#08387f] px-4 py-3.5 font-extrabold text-white shadow-md transition hover:bg-[#1857b6] disabled:cursor-not-allowed disabled:opacity-60">{busy ? 'Memeriksa NISN…' : 'Masuk'}</button>
             </form>
-            <p className="mt-4 text-center text-[11px] font-medium text-blue-100">Sesi perangkat tetap tersimpan setelah login berhasil.</p>
+            <p className="mt-4 text-center text-[11px] font-medium text-slate-500">Sesi perangkat tetap tersimpan setelah login berhasil.</p>
           </div>
         )}
 
-        <p className="mt-8 text-[10px] font-semibold tracking-wide text-blue-100/80">Qurani, Ramah Anak dan Berkarakter</p>
+        <p className="mt-8 text-[10px] font-semibold tracking-wide text-[#d5e4fb]">Qurani, Ramah Anak dan Berkarakter</p>
       </section>
     </main>
   );
