@@ -1,9 +1,8 @@
-name: Deploy SIMPATIK for Students to GitHub Pages
+name: Deploy SIMPATIK visual preview
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches: [main, login-blue-glossy-20261120]
 
 permissions:
   contents: read
@@ -11,7 +10,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: student-pages-deploy
+  group: student-pages-visual-preview
   cancel-in-progress: true
 
 jobs:
@@ -19,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Checkout main app
+      - name: Checkout current production app
         uses: actions/checkout@v4
         with:
           ref: main
@@ -31,31 +30,31 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
-      - name: Install main dependencies
+      - name: Install production dependencies
         run: npm install --legacy-peer-deps --no-audit --no-fund --fetch-retries=2 --fetch-timeout=120000
-      - name: Build main student app
+      - name: Build unchanged production app
         run: npm run build
-      - name: Add main SPA fallback
+      - name: Add production SPA fallback
         run: cp dist/index.html dist/404.html
-      - name: Checkout preview branch
+      - name: Checkout login design branch
         uses: actions/checkout@v4
         with:
-          ref: feat/student-home-redesign
+          ref: login-blue-glossy-20261120
           path: preview-src
-      - name: Prepare preview base path
-        run: |
-          sed -i "s|'/Simpatik-for-Students/'|'/Simpatik-for-Students/preview/'|" preview-src/vite.config.ts
+      - name: Set visual preview base path
+        working-directory: preview-src
+        run: sed -i "s|'/Simpatik-for-Students/'|'/Simpatik-for-Students/preview-login/'|" vite.config.ts
       - name: Install preview dependencies
         working-directory: preview-src
         run: npm install --legacy-peer-deps --no-audit --no-fund --fetch-retries=2 --fetch-timeout=120000
-      - name: Build preview app
+      - name: Build login design preview
         working-directory: preview-src
         run: npm run build
-      - name: Add preview under /preview/
+      - name: Add preview under /preview-login/
         run: |
-          mkdir -p dist/preview
-          cp -R preview-src/dist/. dist/preview/
-          cp dist/preview/index.html dist/preview/404.html
+          mkdir -p dist/preview-login
+          cp -R preview-src/dist/. dist/preview-login/
+          cp dist/preview-login/index.html dist/preview-login/404.html
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -69,6 +68,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy visual preview without changing main source
         id: deployment
         uses: actions/deploy-pages@v4

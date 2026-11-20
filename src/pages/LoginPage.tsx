@@ -5,23 +5,36 @@ export function LoginPage() {
   const { loginWithGoogle, loading } = useAuth();
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[#e7eef8] via-white to-[#eaeef5] px-5 py-10">
-      <div aria-hidden="true" className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" />
-      <div aria-hidden="true" className="pointer-events-none absolute -bottom-28 -right-20 h-80 w-80 rounded-full bg-blue-200/40 blur-3xl" />
-      <section className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-white/80 bg-white/95 p-7 text-center shadow-[0_24px_80px_rgba(8,127,73,0.13)] sm:p-10">
-        <div className="mx-auto mb-5 flex h-32 w-32 items-center justify-center">
-          <img src={`${import.meta.env.BASE_URL}logo-alwasi.png`} alt="Logo SMP Islam Al-Wasi’" className="h-full w-full object-contain" />
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[linear-gradient(145deg,#061b49_0%,#073b86_42%,#0878d1_100%)] px-5 py-10 text-white">
+      <div aria-hidden="true" className="pointer-events-none absolute -left-28 -top-32 h-96 w-96 rounded-full bg-cyan-300/25 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-36 -right-24 h-[28rem] w-[28rem] rounded-full bg-blue-300/25 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 via-white/5 to-transparent" />
+      <div aria-hidden="true" className="pointer-events-none absolute -left-1/3 top-24 h-28 w-[160%] rotate-[-18deg] bg-gradient-to-r from-transparent via-white/10 to-transparent blur-xl" />
+
+      <section className="simpatik-enter relative z-10 mx-auto flex w-full max-w-md flex-col items-center text-center">
+        <div className="relative mb-7 flex h-52 w-52 items-center justify-center sm:mb-8 sm:h-60 sm:w-60">
+          <div aria-hidden="true" className="absolute inset-2 rounded-full bg-white/20 blur-2xl" />
+          <img
+            src={`${import.meta.env.BASE_URL}logo-alwasi.png`}
+            alt="Logo SMP Islam Al-Wasi’"
+            className="relative h-full w-full object-contain drop-shadow-[0_12px_24px_rgba(0,12,48,0.35)]"
+          />
         </div>
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.24em] text-blue-700">SMP Islam Al-Wasi’</p>
-        <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">SIMPATIK</h1>
-        <div className="mx-auto mt-3 h-1 w-12 rounded-full bg-blue-500" />
-        <p className="mt-4 text-sm font-extrabold tracking-wide text-[#08387f]">Selamat Datang Guru Hebat</p>
-        <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-slate-500">Silakan masuk menggunakan akun Google resmi sekolah untuk melanjutkan ke aplikasi.</p>
+
+        <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-blue-100">SMP Islam Al-Wasi’</p>
+        <h1 className="mt-2 text-4xl font-black tracking-[0.08em] text-white drop-shadow-lg sm:text-5xl">SIMPATIK</h1>
+        <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-cyan-200 via-white to-cyan-200 shadow-[0_0_18px_rgba(255,255,255,0.75)]" />
+
+        <p className="mt-6 text-lg font-extrabold text-white">Selamat Datang</p>
+        <p className="mt-2 max-w-xs text-sm leading-6 text-blue-100">
+          Silakan masuk menggunakan akun Google resmi sekolah untuk melanjutkan ke aplikasi.
+        </p>
+
         <button
           type="button"
           onClick={() => void loginWithGoogle()}
           disabled={loading}
-          className="mt-8 flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-[#08387f] to-[#0b4396] px-5 py-4 text-sm font-extrabold text-white shadow-lg shadow-blue-900/15 transition hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-8 flex w-full items-center justify-center gap-3 rounded-2xl border border-white/70 bg-gradient-to-b from-white to-blue-50 px-5 py-4 text-sm font-extrabold text-[#08387f] shadow-[0_10px_30px_rgba(0,16,56,0.25),inset_0_1px_0_rgba(255,255,255,1)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(0,16,56,0.32)] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <svg viewBox="0 0 48 48" aria-hidden="true" className="h-5 w-5 rounded-full bg-white p-0.5">
             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"/>
@@ -31,11 +44,12 @@ export function LoginPage() {
           </svg>
           {loading ? 'SIMPATIK sedang dipersiapkan…' : 'Masuk dengan Google Sekolah'}
         </button>
-        <div className="mt-6 rounded-2xl border border-blue-100 bg-blue-50/80 px-4 py-3 text-left">
-          <p className="text-xs font-extrabold text-blue-950">Akun yang diizinkan</p>
-          <p className="mt-1 text-xs font-medium text-blue-800">@smpialwasi-maros.sch.id</p>
+
+        <div className="mt-6">
+          <p className="text-xs font-bold text-white">Akun yang diizinkan</p>
+          <p className="mt-1 text-xs font-medium text-blue-100">@smpialwasi-maros.sch.id</p>
         </div>
-        <p className="mt-6 text-[10px] font-medium tracking-wide text-slate-400">Qurani, Ramah Anak dan Berkarakter</p>
+        <p className="mt-8 text-[10px] font-semibold tracking-wide text-blue-100/80">Qurani, Ramah Anak dan Berkarakter</p>
       </section>
     </main>
   );
