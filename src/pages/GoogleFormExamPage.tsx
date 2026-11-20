@@ -238,9 +238,9 @@ export const GoogleFormExamPage: React.FC = () => {
 
   return (
     <div className="space-y-5">
-      <section className="rounded-2xl border border-[#d5eadb] bg-gradient-to-br from-[#f2fbf5] to-white p-4 sm:p-5">
+      <section className="rounded-2xl border border-[#d5ddea] bg-gradient-to-br from-[#f2f6fb] to-white p-4 sm:p-5">
         <div className="flex items-start gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#ddf5e6] text-[#087f49]"><FilePlus2 size={23}/></span>
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#dde7f5] text-[#08387f]"><FilePlus2 size={23}/></span>
           <div><h2 className="text-base font-extrabold text-slate-800">Buat Ujian dari Google Form</h2><p className="mt-1 text-xs leading-5 text-slate-500">Daftarkan Google Form, tentukan kelas dan jadwal, lalu kelola status ujian dari SIMPATIK.</p></div>
         </div>
       </section>
@@ -270,10 +270,10 @@ export const GoogleFormExamPage: React.FC = () => {
           </div>
           <label className="space-y-1 text-xs font-bold text-slate-600">Status<select value={draft.status} onChange={e => setDraft(v => ({ ...v, status: e.target.value as FormExam['status'] }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-medium"><option value="Draft">Draft</option><option value="Aktif">Aktif</option></select></label>
         </div>
-        <button disabled={saving} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#087f49] px-4 py-3 text-sm font-extrabold text-white hover:bg-[#06683c] disabled:opacity-60"><Save size={17}/>{saving ? 'Menyimpan…' : editingId ? 'Simpan Perubahan' : 'Buat Ujian Form'}</button>
+        <button disabled={saving} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#08387f] px-4 py-3 text-sm font-extrabold text-white hover:bg-[#062d68] disabled:opacity-60"><Save size={17}/>{saving ? 'Menyimpan…' : editingId ? 'Simpan Perubahan' : 'Buat Ujian Form'}</button>
       </form>
 
-      {notice && <p role="status" className="rounded-xl border border-[#cdebd8] bg-[#f1faf4] px-4 py-3 text-xs font-semibold text-[#087640]">{notice}</p>}
+      {notice && <p role="status" className="rounded-xl border border-[#cdd9eb] bg-[#f1f5fa] px-4 py-3 text-xs font-semibold text-[#083476]">{notice}</p>}
 
       <section className="space-y-3">
         <div className="flex items-center justify-between"><h3 className="font-extrabold text-slate-800">Daftar Ujian Form</h3><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">{exams.length} ujian</span></div>
