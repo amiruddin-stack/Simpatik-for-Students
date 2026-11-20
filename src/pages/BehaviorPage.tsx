@@ -124,7 +124,7 @@ export const BehaviorPage: React.FC = () => {
 
           <button
             onClick={handleOpenAdd}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white bg-[#076b3a] hover:bg-[#076b3a] rounded-lg transition-colors shadow-xs"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white bg-[#072f6b] hover:bg-[#072f6b] rounded-lg transition-colors shadow-xs"
           >
             
             <span>Catat Perilaku</span>
@@ -140,7 +140,7 @@ export const BehaviorPage: React.FC = () => {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
             >
               <option value="Semua">Semua Kategori</option>
               {categories.map((c) => (
@@ -158,7 +158,7 @@ export const BehaviorPage: React.FC = () => {
             <select
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
             >
               <option value="Semua">Semua Kelas</option>
               {classes.map((cls) => (
@@ -178,7 +178,7 @@ export const BehaviorPage: React.FC = () => {
               placeholder="Cari..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
             />
           </div>
         </div>
@@ -190,9 +190,9 @@ export const BehaviorPage: React.FC = () => {
           <span className="text-[11px] font-semibold text-slate-400">Total Catatan Pembinaan</span>
           <p className="text-xl font-bold text-slate-900 mt-0.5">{behaviors.length} Kejadian</p>
         </div>
-        <div className="p-3.5 rounded-xl bg-[#e3f7ec] border border-[#b7e8cd]">
-          <span className="text-[11px] font-semibold text-[#076b3a]">Perilaku Positif & Prestasi</span>
-          <p className="text-xl font-bold text-[#076b3a] mt-0.5">{positiveCount} Catatan</p>
+        <div className="p-3.5 rounded-xl bg-[#e3ebf7] border border-[#b7cbe8]">
+          <span className="text-[11px] font-semibold text-[#072f6b]">Perilaku Positif & Prestasi</span>
+          <p className="text-xl font-bold text-[#072f6b] mt-0.5">{positiveCount} Catatan</p>
         </div>
         <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200">
           <span className="text-[11px] font-semibold text-amber-800">Dalam Proses Pembinaan</span>
@@ -226,7 +226,7 @@ export const BehaviorPage: React.FC = () => {
                     <span
                       className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${
                         isPositive
-                          ? 'bg-[#e3f7ec] text-[#076b3a]'
+                          ? 'bg-[#e3ebf7] text-[#072f6b]'
                           : item.category === 'Kedisiplinan'
                           ? 'bg-amber-100 text-amber-800'
                           : 'bg-rose-100 text-rose-800'
@@ -241,7 +241,7 @@ export const BehaviorPage: React.FC = () => {
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                         item.status === 'Selesai'
-                          ? 'bg-[#e3f7ec] text-[#076b3a] border border-[#b7e8cd]'
+                          ? 'bg-[#e3ebf7] text-[#072f6b] border border-[#b7cbe8]'
                           : 'bg-amber-50 text-amber-800 border border-amber-200'
                       }`}
                     >
@@ -326,7 +326,7 @@ export const BehaviorPage: React.FC = () => {
                 <select
                   value={formData.studentId}
                   onChange={(e) => handleStudentSelect(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
                 >
                   {students.map((std) => (
                     <option key={std.id} value={std.id}>
@@ -346,7 +346,7 @@ export const BehaviorPage: React.FC = () => {
                     required
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
                   />
                 </div>
                 <div>
@@ -358,7 +358,7 @@ export const BehaviorPage: React.FC = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, category: e.target.value as BehaviorCategory })
                     }
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
                   >
                     {categories.map((c) => (
                       <option key={c} value={c}>
@@ -379,7 +379,7 @@ export const BehaviorPage: React.FC = () => {
                   placeholder="Ceritakan kejadian atau inisiatif positif secara objektif..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
                 />
               </div>
 
@@ -393,7 +393,7 @@ export const BehaviorPage: React.FC = () => {
                   placeholder="Langkah edukatif guru (nasehat, penghargaan, komitmen perbaikan)..."
                   value={formData.coachingAction}
                   onChange={(e) => setFormData({ ...formData, coachingAction: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
                 />
               </div>
 
@@ -409,7 +409,7 @@ export const BehaviorPage: React.FC = () => {
                       status: e.target.value as 'Selesai' | 'Dalam Pembinaan' | 'Perlu Perhatian',
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076b3a]"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
                 >
                   <option value="Selesai">Selesai (Tuntas)</option>
                   <option value="Dalam Pembinaan">Dalam Pembinaan</option>
@@ -427,7 +427,7 @@ export const BehaviorPage: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 text-xs font-bold text-white bg-[#076b3a] hover:bg-[#076b3a] rounded-xl shadow-xs"
+                  className="px-5 py-2 text-xs font-bold text-white bg-[#072f6b] hover:bg-[#072f6b] rounded-xl shadow-xs"
                 >
                   Simpan Catatan
                 </button>
