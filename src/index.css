@@ -17,13 +17,13 @@
 
 :root {
   color-scheme: light;
-  --blue-primary: #27c879;
-  --blue-dark: #18b66a;
-  --blue-deep: #087f49;
-  --blue-soft: #e8f9ef;
+  --blue-primary: #2767c8;
+  --blue-dark: #1857b6;
+  --blue-deep: #08387f;
+  --blue-soft: #e8eff9;
   --simpatik-primary: var(--blue-primary);
   --simpatik-primary-dark: var(--blue-deep);
-  --simpatik-primary-light: #a6ebc4;
+  --simpatik-primary-light: #a6c2eb;
 }
 
 html, body, #root {
@@ -38,7 +38,7 @@ html, body, #root, button, input, textarea, select, option {
 
 body {
   background: #FFFFFF;
-  color: #172b22;
+  color: #171f2b;
 }
 
 
@@ -96,7 +96,7 @@ body {
   --simpatik-blue-bright: var(--blue-primary);
   --simpatik-blue-primary: var(--blue-primary);
   --simpatik-blue-soft: var(--blue-soft);
-  --simpatik-blue-line: #c4efd5;
+  --simpatik-blue-line: #c4d5ef;
 }
 
 .simpatik-hero {
@@ -186,7 +186,7 @@ body {
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, .08);
   background: #fff;
-  color: #0f7a4a;
+  color: #0f3a7a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -203,7 +203,7 @@ body {
 .page-title p {
   margin: 2px 0 0;
   font-size: 12px;
-  color: #4f8a6b;
+  color: #4f678a;
 }
 
 
@@ -214,7 +214,7 @@ body {
   overflow: hidden;
   border-radius: 24px;
   color: #FFFFFF;
-  background: linear-gradient(135deg, #087640 0%, #0b9654 52%, #27c879 100%);
+  background: linear-gradient(135deg, #083476 0%, #0b4396 52%, #2767c8 100%);
   box-shadow: 0 12px 30px rgba(7, 107, 58, 0.22);
 }
 
