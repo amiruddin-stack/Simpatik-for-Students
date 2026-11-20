@@ -108,7 +108,7 @@ export const AssessmentPage: React.FC = () => {
   };
 
   const getPredicate = (score: number) => {
-    if (score >= 90) return { label: 'A', text: 'Sangat Baik', color: 'text-[#0B8F4D] bg-[#E3F7EC]' };
+    if (score >= 90) return { label: 'A', text: 'Sangat Baik', color: 'text-[#0b408f] bg-[#e3ebf7]' };
     if (score >= 80) return { label: 'B', text: 'Baik', color: 'text-blue-700 bg-blue-50' };
     if (score >= 75) return { label: 'C', text: 'Cukup (KKM)', color: 'text-amber-700 bg-amber-50' };
     return { label: 'D', text: 'Perlu Bimbingan', color: 'text-rose-700 bg-rose-50' };
@@ -142,7 +142,7 @@ export const AssessmentPage: React.FC = () => {
             {canInputGrades && (
               <button
                 onClick={handleSaveBatch}
-                className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-bold text-white bg-[#076B3A] hover:bg-[#076B3A] rounded-lg transition-colors shadow-xs"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-bold text-white bg-[#072f6b] hover:bg-[#072f6b] rounded-lg transition-colors shadow-xs"
               >
                 
                 <span>Simpan Nilai Kelas</span>
@@ -158,7 +158,7 @@ export const AssessmentPage: React.FC = () => {
             <select
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
             >
               {classes.map((cls) => (
                 <option key={cls} value={cls}>
@@ -173,7 +173,7 @@ export const AssessmentPage: React.FC = () => {
             <select
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
             >
               {subjects.map((sub) => (
                 <option key={sub} value={sub}>
@@ -188,7 +188,7 @@ export const AssessmentPage: React.FC = () => {
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value as AssessmentType)}
-              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
             >
               {assessmentTypes.map((type) => (
                 <option key={type} value={type}>
@@ -207,7 +207,7 @@ export const AssessmentPage: React.FC = () => {
                 max="100"
                 value={kkm}
                 onChange={(e) => setKkm(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-bold focus:outline-none focus:border-[#076B3A]"
+                className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-bold focus:outline-none focus:border-[#072f6b]"
               />
             </div>
             <div className="w-1/2">
@@ -216,7 +216,7 @@ export const AssessmentPage: React.FC = () => {
                 type="date"
                 value={assessmentDate}
                 onChange={(e) => setAssessmentDate(e.target.value)}
-                className="w-full px-2 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#076B3A]"
+                className="w-full px-2 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-medium focus:outline-none focus:border-[#072f6b]"
               />
             </div>
           </div>
@@ -229,9 +229,9 @@ export const AssessmentPage: React.FC = () => {
           <span className="text-[11px] font-semibold text-slate-400">Rata-Rata Nilai</span>
           <p className="text-xl font-bold text-slate-900">{avgScore}</p>
         </div>
-        <div className="p-3 rounded-xl bg-[#E3F7EC] border border-[#B7E8CD] text-center">
-          <span className="text-[11px] font-semibold text-[#076B3A]">Tuntas KKM (≥{kkm})</span>
-          <p className="text-xl font-bold text-[#076B3A]">
+        <div className="p-3 rounded-xl bg-[#e3ebf7] border border-[#b7cbe8] text-center">
+          <span className="text-[11px] font-semibold text-[#072f6b]">Tuntas KKM (≥{kkm})</span>
+          <p className="text-xl font-bold text-[#072f6b]">
             {tuntasCount} / {classStudents.length} Siswa
           </p>
         </div>
@@ -246,7 +246,7 @@ export const AssessmentPage: React.FC = () => {
       </div>
 
       {saveSuccess && (
-        <div className="p-3 rounded-xl bg-[#E3F7EC] border border-[#B7E8CD] text-[#076B3A] text-xs font-semibold flex items-center gap-2">
+        <div className="p-3 rounded-xl bg-[#e3ebf7] border border-[#b7cbe8] text-[#072f6b] text-xs font-semibold flex items-center gap-2">
            Nilai {selectedType} untuk {selectedSubject} Kelas {selectedClass} berhasil disimpan ke Firestore!
         </div>
       )}
@@ -297,7 +297,7 @@ export const AssessmentPage: React.FC = () => {
                           max="100"
                           value={currentVal}
                           onChange={(e) => handleScoreChange(std.id, Number(e.target.value))}
-                          className="w-20 px-2 py-1.5 text-center font-bold text-sm rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:bg-white focus:border-[#076B3A]"
+                          className="w-20 px-2 py-1.5 text-center font-bold text-sm rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:bg-white focus:border-[#072f6b]"
                         />
                       </div>
                     </td>
@@ -313,7 +313,7 @@ export const AssessmentPage: React.FC = () => {
                       <span
                         className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${
                           isTuntas
-                            ? 'bg-[#E3F7EC] text-[#076B3A]'
+                            ? 'bg-[#e3ebf7] text-[#072f6b]'
                             : 'bg-rose-100 text-rose-800'
                         }`}
                       >
@@ -326,7 +326,7 @@ export const AssessmentPage: React.FC = () => {
                         placeholder="Capaian kompetensi..."
                         value={currentNote}
                         onChange={(e) => handleNoteChange(std.id, e.target.value)}
-                        className="w-full px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-xs focus:outline-none focus:bg-white focus:border-[#076B3A]"
+                        className="w-full px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-xs focus:outline-none focus:bg-white focus:border-[#072f6b]"
                       />
                     </td>
                   </tr>

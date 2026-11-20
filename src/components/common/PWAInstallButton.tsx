@@ -8,7 +8,7 @@ export const PWAInstallButton: React.FC = () => {
   // If already running as an installed standalone PWA, hide the button
   if (isInstalled) {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-[#0B8F4D] bg-[#E3F7EC] border border-[#B7E8CD] rounded-lg">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-[#0b408f] bg-[#e3ebf7] border border-[#b7cbe8] rounded-lg">
         
         <span className="hidden sm:inline">PWA Terpasang</span>
       </span>
@@ -20,7 +20,7 @@ export const PWAInstallButton: React.FC = () => {
     return (
       <button
         onClick={install}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-[#076B3A] hover:bg-[#076B3A] active:bg-[#076B3A] rounded-lg transition-colors shadow-xs"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-[#072f6b] hover:bg-[#072f6b] active:bg-[#072f6b] rounded-lg transition-colors shadow-xs"
         title="Instal SIPADU ke layar beranda"
       >
         
@@ -71,7 +71,7 @@ export const PWAInstallButton: React.FC = () => {
               </div>
               <button
                 onClick={() => setShowIOSGuide(false)}
-                className="mt-5 w-full rounded-lg bg-[#076B3A] py-2 text-sm font-medium text-white hover:bg-[#076B3A]"
+                className="mt-5 w-full rounded-lg bg-[#072f6b] py-2 text-sm font-medium text-white hover:bg-[#072f6b]"
               >
                 Tutup Panduan
               </button>
