@@ -418,14 +418,14 @@ export const StudentPortalPage: React.FC = () => {
       `}</style>
 
       <section className="simpatik-enter relative z-10 mx-auto flex w-full max-w-md flex-col items-center text-center">
-        <div className="relative mb-5 flex h-44 w-44 items-center justify-center sm:mb-6 sm:h-52 sm:w-52">
+        <div className="relative mb-5 flex h-52 w-52 items-center justify-center sm:mb-6 sm:h-60 sm:w-60">
           <div aria-hidden="true" className="absolute inset-2 rounded-full bg-white/20 blur-2xl"/>
           <img src={`${import.meta.env.BASE_URL}logo-alwasi.png`} alt="Logo SMP Islam Al-Wasi’" className="relative h-full w-full object-contain drop-shadow-[0_12px_24px_rgba(0,12,48,0.35)]"/>
         </div>
         <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#e8eff9]">SMP Islam Al-Wasi’</p>
         <h1 className="mt-2 text-4xl font-black tracking-[0.08em] text-white drop-shadow-lg sm:text-5xl">SIMPATIK</h1>
         <p className="mt-2 text-sm font-bold tracking-wide text-[#d5e4fb]">FOR STUDENTS</p>
-        <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-cyan-200 via-white to-cyan-200 shadow-[0_0_18px_rgba(255,255,255,0.75)]"/>
+        <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-white/75"/>
         <p className="mt-5 text-lg font-extrabold text-white">Selamat Datang</p>
         <p className="mt-2 max-w-xs text-sm leading-6 text-[#e8eff9]">Portal siswa SMP Islam Al-Wasi’. Silakan pilih menu untuk melanjutkan.</p>
 
