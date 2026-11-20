@@ -2,7 +2,7 @@ name: Deploy SIMPATIK visual preview
 
 on:
   push:
-    branches: [login-blue-glossy-20261120]
+    branches: [main, login-blue-glossy-20261120]
 
 permissions:
   contents: read
