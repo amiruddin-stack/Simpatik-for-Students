@@ -392,26 +392,71 @@ export const StudentPortalPage: React.FC = () => {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[#e7eef8] via-[#f9fafc] to-[#eaeef5] px-4 py-8">
-      <section className="relative w-full max-w-md overflow-hidden rounded-[30px] border border-white/90 bg-white shadow-[0_24px_75px_rgba(8,127,73,0.14)]">
-        <header className="bg-gradient-to-br from-[#083476] via-[#0b408f] to-[#2057a9] px-6 py-9 text-center text-white">
-          <div className="mx-auto mb-5 flex h-28 w-28 items-center justify-center"><img src={`${import.meta.env.BASE_URL}logo-alwasi.png`} alt="Logo SMP Islam Al-Wasi’" className="h-full w-full object-contain"/></div>
-          <p className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-white/85">SMP Islam Al-Wasi’</p>
-          <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">SIMPATIK for Student</h1>
-          <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-white/90">Selamat datang siswa-siswi terbaik SMP Islam Al-Wasi’</p>
-        </header>
-        <div className="grid gap-3 p-5 sm:p-6">
-          <button type="button" onClick={() => { setMessage(''); setView('register'); }} className="group flex w-full items-center gap-4 rounded-2xl border border-[#d9e1ee] p-4 text-left transition hover:border-[#0b408f] hover:bg-[#f5f8fc]">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e3ebf7] text-[#08387f]"><UserRound size={23}/></span>
-            <span className="min-w-0 flex-1"><span className="block font-bold text-slate-800">Mendaftar</span><span className="mt-1 block text-xs leading-5 text-slate-500">Isi NISN, nama lengkap, dan pilih kelas. Tunggu persetujuan admin.</span></span><ArrowRight className="text-[#08387f]" size={19}/>
-          </button>
-          <button type="button" onClick={() => { setMessage(''); setView('login'); }} className="group flex w-full items-center gap-4 rounded-2xl border border-[#d9e1ee] p-4 text-left transition hover:border-[#0b408f] hover:bg-[#f5f8fc]">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e3ebf7] text-[#08387f]"><KeyRound size={23}/></span>
-            <span className="min-w-0 flex-1"><span className="block font-bold text-slate-800">Masuk</span><span className="mt-1 block text-xs leading-5 text-slate-500">Untuk siswa yang sudah disetujui admin. Masuk menggunakan NISN.</span></span><ArrowRight className="text-[#08387f]" size={19}/>
-          </button>
+    <main className="simpatik-periodic-shine relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[linear-gradient(145deg,#08387f_0%,#1857b6_52%,#2767c8_100%)] px-5 py-8 text-white">
+      <style>{`
+        @keyframes simpatik-light-sweep {
+          0%, 82% { transform: translateX(-155%) skewX(-18deg); opacity: 0; }
+          84% { opacity: .0; }
+          86% { opacity: .48; }
+          92% { transform: translateX(255%) skewX(-18deg); opacity: .22; }
+          94%, 100% { transform: translateX(255%) skewX(-18deg); opacity: 0; }
+        }
+        .simpatik-periodic-shine::after {
+          content: "";
+          position: absolute;
+          z-index: 0;
+          inset: -25% auto -25% 0;
+          width: 42%;
+          pointer-events: none;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,.34), rgba(255,255,255,.08), transparent);
+          filter: blur(3px);
+          animation: simpatik-light-sweep 30s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .simpatik-periodic-shine::after { animation: none; }
+        }
+      `}</style>
+
+      <section className="simpatik-enter relative z-10 mx-auto flex w-full max-w-md flex-col items-center text-center">
+        <div className="relative mb-5 flex h-52 w-52 items-center justify-center sm:mb-6 sm:h-60 sm:w-60">
+          <div aria-hidden="true" className="absolute inset-2 rounded-full bg-white/20 blur-2xl"/>
+          <img src={`${import.meta.env.BASE_URL}logo-alwasi.png`} alt="Logo SMP Islam Al-Wasi’" className="relative h-full w-full object-contain drop-shadow-[0_12px_24px_rgba(0,12,48,0.35)]"/>
         </div>
-        {view === 'login' && <div className="border-t border-[#e7ebf1] px-5 py-5 sm:px-6"><div className="mb-3"><h2 className="font-bold text-slate-800">Masuk SIMPATIK for Student</h2><p className="mt-1 text-xs leading-5 text-slate-500">Masukkan NISN. Perangkat akan diingat setelah login berhasil.</p></div><form onSubmit={loginStudent} className="grid gap-3"><label className="grid gap-1.5 text-sm font-semibold text-slate-700">NISN<input value={nisn} onChange={e => setNisn(e.target.value.slice(0,30))} maxLength={30} required placeholder="Masukkan NISN" className="rounded-xl border border-slate-200 px-3 py-3 text-base outline-none focus:border-[#164ea3] focus:ring-2 focus:ring-[#e3ebf7]"/></label>{message && <p role="status" className="rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-800">{message}</p>}<button type="submit" disabled={busy} className="rounded-xl bg-[#0b408f] px-4 py-3 font-bold text-white transition hover:bg-[#083476] disabled:opacity-60">{busy ? 'Memeriksa NISN…' : 'Masuk'}</button></form></div>}
-        <footer className="border-t border-[#e7ebf1] px-5 py-4 text-center text-[11px] text-slate-400">Qurani, Ramah Anak dan Berkarakter · SIMPATIK</footer>
+        <p className="text-xs font-extrabold uppercase tracking-[0.28em] text-[#e8eff9]">SMP Islam Al-Wasi’</p>
+        <h1 className="mt-2 text-4xl font-black tracking-[0.08em] text-white drop-shadow-lg sm:text-5xl">SIMPATIK</h1>
+        <p className="mt-2 text-sm font-bold tracking-wide text-[#d5e4fb]">FOR STUDENTS</p>
+        <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-white/75"/>
+        <p className="mt-5 text-lg font-extrabold text-white">Selamat Datang</p>
+        <p className="mt-2 max-w-xs text-sm leading-6 text-[#e8eff9]">Portal siswa SMP Islam Al-Wasi’. Silakan pilih menu untuk melanjutkan.</p>
+
+        {view === 'home' && (
+          <div className="mt-7 grid w-full gap-3">
+            <button type="button" onClick={() => { setMessage(''); setView('register'); }} className="flex w-full items-center justify-center gap-3 rounded-2xl border border-white/80 bg-[#e8eff9] px-5 py-4 text-sm font-extrabold text-[#08387f] shadow-md transition hover:bg-white">
+              <UserRound size={20}/> Mendaftar
+            </button>
+            <button type="button" onClick={() => { setMessage(''); setView('login'); }} className="flex w-full items-center justify-center gap-3 rounded-2xl border border-[#a6c2eb] bg-[#08387f] px-5 py-4 text-sm font-extrabold text-white shadow-md transition hover:bg-[#1857b6]">
+              <KeyRound size={20}/> Masuk dengan NISN
+            </button>
+          </div>
+        )}
+
+        {view === 'login' && (
+          <div className="mt-7 w-full rounded-3xl border border-[#c4d5ef] bg-white p-5 text-left text-slate-800 shadow-[0_16px_40px_rgba(3,24,66,0.22)] sm:p-6">
+            <button type="button" onClick={() => { setMessage(''); setView('home'); }} aria-label="Kembali" className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-[#e8eff9] text-[#08387f]"><ArrowLeft size={18}/></button>
+            <h2 className="text-lg font-extrabold text-[#08387f]">Masuk SIMPATIK</h2>
+            <p className="mt-1 text-xs leading-5 text-slate-600">Masukkan NISN yang telah terdaftar dan disetujui admin.</p>
+            <form onSubmit={loginStudent} className="mt-4 grid gap-3">
+              <label className="grid gap-1.5 text-sm font-bold text-[#08387f]">NISN
+                <input value={nisn} onChange={e => setNisn(e.target.value.slice(0,30))} maxLength={30} required placeholder="Masukkan NISN" className="w-full rounded-xl border border-white/60 bg-white px-4 py-3 text-base font-semibold text-slate-800 outline-none placeholder:text-slate-400 focus:border-cyan-200 focus:ring-2 focus:ring-cyan-200/50"/>
+              </label>
+              {message && <p role="status" className="rounded-xl border border-amber-200/50 bg-amber-100/15 p-3 text-xs leading-5 text-amber-50">{message}</p>}
+              <button type="submit" disabled={busy} className="mt-1 rounded-xl bg-[#08387f] px-4 py-3.5 font-extrabold text-white shadow-md transition hover:bg-[#1857b6] disabled:cursor-not-allowed disabled:opacity-60">{busy ? 'Memeriksa NISN…' : 'Masuk'}</button>
+            </form>
+            <p className="mt-4 text-center text-[11px] font-medium text-slate-500">Sesi perangkat tetap tersimpan setelah login berhasil.</p>
+          </div>
+        )}
+
+        <p className="mt-8 text-[10px] font-semibold tracking-wide text-[#d5e4fb]">Qurani, Ramah Anak dan Berkarakter</p>
       </section>
     </main>
   );
