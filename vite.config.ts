@@ -16,6 +16,7 @@ export default defineConfig(() => ({
         'icons/simpatik-for-students.svg',
         'icons/simpatik-for-students-192.png',
         'icons/simpatik-for-students-512.png',
+        'icons/simpatik-for-students-new.png',
       ],
       workbox: {
         cacheId: 'simpatik-students-ujian-v2',
