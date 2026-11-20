@@ -228,16 +228,16 @@ export const StudentPortalPage: React.FC = () => {
   };
 
   if (view === 'register') return (
-    <div className="min-h-screen bg-[#f7fbf8] px-3 py-5 sm:px-6">
+    <div className="min-h-screen bg-[#f7f9fb] px-3 py-5 sm:px-6">
       <div className="mx-auto max-w-2xl">
-        <button type="button" onClick={() => setView('home')} aria-label="Kembali" className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-[#0b8f4d] to-[#087640] text-white shadow"><ArrowLeft size={20}/></button>
+        <button type="button" onClick={() => setView('home')} aria-label="Kembali" className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-[#0b408f] to-[#083476] text-white shadow"><ArrowLeft size={20}/></button>
         <RegistrationPage type="siswa" studentPortal />
       </div>
     </div>
   );
 
   if (studentSession && student) {
-    if (sessionChecking) return <main className="flex min-h-screen items-center justify-center bg-[#f7fbf8] p-5 text-center text-sm font-semibold text-slate-500">Memulihkan sesi siswa…</main>;
+    if (sessionChecking) return <main className="flex min-h-screen items-center justify-center bg-[#f7f9fb] p-5 text-center text-sm font-semibold text-slate-500">Memulihkan sesi siswa…</main>;
 
   if (examRoomId) return <StudentGoogleFormExams className={student.className} nisn={student.nisn} studentId={student.id} studentName={student.name} examRoomId={examRoomId} onEnterExam={enterExamRoom} onExitExam={exitExamRoom} />;
     const selectMenu = (id: StudentMenu) => { setActiveMenu(id); };
@@ -245,35 +245,35 @@ export const StudentPortalPage: React.FC = () => {
     const renderContent = () => {
       if (activeMenu === 'profil') return (
         <div className="grid gap-4">
-          <section className="rounded-2xl border border-[#d9eee2] bg-white p-5 shadow-sm">
+          <section className="rounded-2xl border border-[#d9e1ee] bg-white p-5 shadow-sm">
             <div className="flex flex-col items-center text-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#e3f7ec] text-[#087f49]"><UserRound size={38}/></div>
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#e3ebf7] text-[#08387f]"><UserRound size={38}/></div>
               <h2 className="mt-3 text-xl font-black text-slate-800">{student.name}</h2>
-              <p className="mt-1 text-sm font-semibold text-[#087f49]">Kelas {getClassDisplayName(student.className) || student.className}</p>
-              <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#e3f7ec] px-3 py-1.5 text-xs font-bold text-[#087f49]"><span className="h-1.5 w-1.5 rounded-full bg-[#0b8f4d]"/> Akun Aktif</span>
+              <p className="mt-1 text-sm font-semibold text-[#08387f]">Kelas {getClassDisplayName(student.className) || student.className}</p>
+              <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#e3ebf7] px-3 py-1.5 text-xs font-bold text-[#08387f]"><span className="h-1.5 w-1.5 rounded-full bg-[#0b408f]"/> Akun Aktif</span>
             </div>
           </section>
-          <section className="rounded-2xl border border-[#d9eee2] bg-white p-4 shadow-sm">
+          <section className="rounded-2xl border border-[#d9e1ee] bg-white p-4 shadow-sm">
             <h3 className="font-extrabold text-slate-800">Ringkasan Akun</h3>
             <div className="mt-3 grid grid-cols-2 gap-3">
-              <div className="rounded-xl bg-[#f5fbf7] p-3"><p className="text-xs text-slate-500">Status</p><p className="mt-1 font-bold text-[#087f49]">Aktif</p></div>
-              <div className="rounded-xl bg-[#f5fbf7] p-3"><p className="text-xs text-slate-500">Kelas</p><p className="mt-1 font-bold text-slate-800">{student.className}</p></div>
+              <div className="rounded-xl bg-[#f5f7fb] p-3"><p className="text-xs text-slate-500">Status</p><p className="mt-1 font-bold text-[#08387f]">Aktif</p></div>
+              <div className="rounded-xl bg-[#f5f7fb] p-3"><p className="text-xs text-slate-500">Kelas</p><p className="mt-1 font-bold text-slate-800">{student.className}</p></div>
             </div>
           </section>
         </div>
       );
       if (activeMenu === 'biodata') return (
-        <section className="rounded-2xl border border-[#d9eee2] bg-white p-4 shadow-sm sm:p-5">
+        <section className="rounded-2xl border border-[#d9e1ee] bg-white p-4 shadow-sm sm:p-5">
           <h2 className="mb-4 font-extrabold text-slate-800">Identitas Siswa</h2>
-          <dl className="divide-y divide-[#e7f1ea]">
+          <dl className="divide-y divide-[#e7ebf1]">
             {[['Nama Lengkap', student.name], ['Kelas', student.className], ['NIS', student.nis || '—'], ['NISN', student.nisn || '—'], ['Jenis Kelamin', student.gender === 'L' ? 'Laki-laki' : student.gender === 'P' ? 'Perempuan' : '—'], ['Status Akun', 'Aktif']].map(([label, value]) => <div key={label} className="flex flex-col gap-1 py-3 sm:flex-row sm:items-center sm:justify-between"><dt className="text-xs font-medium text-slate-500">{label}</dt><dd className="text-sm font-bold text-slate-800">{value}</dd></div>)}
           </dl>
           <p className="mt-3 rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-800">Jika ada biodata yang perlu diperbaiki, silakan hubungi admin sekolah.</p>
         </section>
       );
       if (activeMenu === 'tahsin' || activeMenu === 'bacaan-sholat') return (
-        <section className="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-[#d9eee2] bg-white p-6 text-center shadow-sm">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#e3f7ec] text-[#087f49]"><BookOpen size={30}/></div>
+        <section className="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-[#d9e1ee] bg-white p-6 text-center shadow-sm">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#e3ebf7] text-[#08387f]"><BookOpen size={30}/></div>
           <h2 className="mt-4 text-lg font-black text-slate-800">{activeLabel}</h2>
           <span className="mt-3 rounded-full bg-amber-50 px-4 py-2 text-xs font-bold text-amber-700">Coming Soon</span>
           <p className="mt-2 max-w-sm text-sm text-slate-500">Materi {activeLabel.toLowerCase()} sedang disiapkan.</p>
@@ -281,30 +281,30 @@ export const StudentPortalPage: React.FC = () => {
       );
       if (activeMenu === 'ujian-form') return <StudentGoogleFormExams className={student.className} nisn={student.nisn} studentId={student.id} studentName={student.name} onEnterExam={enterExamRoom} onExitExam={exitExamRoom} />;
       if (activeMenu === 'ujian-semester' || activeMenu === 'ujian-sekolah') return (
-        <section className="rounded-2xl border border-[#d9eee2] bg-white p-3 shadow-sm sm:p-5">
+        <section className="rounded-2xl border border-[#d9e1ee] bg-white p-3 shadow-sm sm:p-5">
           <div className="mb-4"><h2 className="font-extrabold text-slate-800">{activeLabel}</h2><p className="mt-1 text-xs text-slate-500">Pilih ujian yang tersedia untuk kelas {student.className}.</p></div>
           <ExamPage studentMode />
         </section>
       );
       if (activeMenu === 'dashboard') return null;
       return (
-        <section className="rounded-2xl border border-[#d9eee2] bg-white p-5 shadow-sm">
-          <div className="flex items-center gap-3"><div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#e3f7ec] text-[#087f49]"><ShieldCheck size={25}/></div><div><h2 className="font-extrabold text-slate-800">Keamanan Akun</h2><p className="text-xs text-slate-500">Kelola sesi masuk pada perangkat ini.</p></div></div>
-          <div className="mt-5 rounded-xl bg-[#f5fbf7] p-4"><p className="text-sm font-bold text-slate-800">Masuk menggunakan NISN</p><p className="mt-1 text-xs leading-5 text-slate-500">Sesi akun tersimpan pada perangkat ini agar siswa tidak perlu masuk berulang kali. Jangan gunakan perangkat bersama tanpa keluar dari akun.</p></div>
+        <section className="rounded-2xl border border-[#d9e1ee] bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-3"><div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#e3ebf7] text-[#08387f]"><ShieldCheck size={25}/></div><div><h2 className="font-extrabold text-slate-800">Keamanan Akun</h2><p className="text-xs text-slate-500">Kelola sesi masuk pada perangkat ini.</p></div></div>
+          <div className="mt-5 rounded-xl bg-[#f5f7fb] p-4"><p className="text-sm font-bold text-slate-800">Masuk menggunakan NISN</p><p className="mt-1 text-xs leading-5 text-slate-500">Sesi akun tersimpan pada perangkat ini agar siswa tidak perlu masuk berulang kali. Jangan gunakan perangkat bersama tanpa keluar dari akun.</p></div>
           <button type="button" onClick={logout} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-rose-200 px-4 py-3 text-sm font-bold text-rose-600 transition hover:bg-rose-50"><LogOut size={17}/> Keluar dari akun siswa</button>
         </section>
       );
     };
 
     return (
-      <main className="min-h-screen bg-[#f7fbf8]">
+      <main className="min-h-screen bg-[#f7f9fb]">
         <div className="mx-auto max-w-7xl px-3 py-4 sm:px-5 sm:py-6">
           {activeMenu === 'dashboard' ? (
             <>
               <header className="relative mb-5 flex h-12 items-center justify-between px-1">
                 <img src={`${import.meta.env.BASE_URL}logo-alwasi.png`} alt="Logo SMP Islam Al-Wasi’" className="h-10 w-10 object-contain"/>
-                <h1 className="absolute left-1/2 -translate-x-1/2 text-base font-extrabold text-[#087f49]">Home</h1>
-                <button type="button" aria-label="Notifikasi" title="Notifikasi" className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#087f49]">
+                <h1 className="absolute left-1/2 -translate-x-1/2 text-base font-extrabold text-[#08387f]">Home</h1>
+                <button type="button" aria-label="Notifikasi" title="Notifikasi" className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#08387f]">
                   <Bell size={23} strokeWidth={2}/>
                   <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white"/>
                 </button>
@@ -317,11 +317,11 @@ export const StudentPortalPage: React.FC = () => {
           ) : (
             <div className="mb-3 flex items-center justify-between gap-3 px-1">
               <div className="min-w-0"><p className="truncate text-sm font-extrabold text-slate-800 sm:text-base">{student.name}</p><p className="text-[11px] font-medium text-slate-500">Kelas {student.className}</p></div>
-              <button type="button" aria-label="Notifikasi" title="Notifikasi" className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#d9eee2] bg-white text-[#087f49] shadow-sm"><Bell size={19}/><span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white"/></button>
+              <button type="button" aria-label="Notifikasi" title="Notifikasi" className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#d9e1ee] bg-white text-[#08387f] shadow-sm"><Bell size={19}/><span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white"/></button>
             </div>
           )}
           {activeMenu === 'dashboard' && (
-          <header className="relative isolate mb-6 flex min-h-[150px] items-center overflow-hidden rounded-[26px] bg-gradient-to-br from-[#0b8f4d] via-[#087f49] to-[#06663a] px-4 py-4 text-white shadow-lg sm:min-h-[168px] sm:px-5">
+          <header className="relative isolate mb-6 flex min-h-[150px] items-center overflow-hidden rounded-[26px] bg-gradient-to-br from-[#0b408f] via-[#08387f] to-[#062c66] px-4 py-4 text-white shadow-lg sm:min-h-[168px] sm:px-5">
             <div className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full border-[24px] border-white/10"/>
             <div className="pointer-events-none absolute -bottom-24 right-24 h-44 w-44 rounded-full bg-white/5"/>
             <img src={`${import.meta.env.BASE_URL}images/Desain%20tanpa%20judul_20261118_110522_0000.png`} alt="Ilustrasi siswa menggunakan teknologi pembelajaran" className="pointer-events-none absolute inset-y-0 right-0 z-0 h-full w-[41%] object-contain object-right drop-shadow-[0_8px_8px_rgba(0,0,0,0.12)]"/>
@@ -335,16 +335,16 @@ export const StudentPortalPage: React.FC = () => {
           )}
 
           {activeMenu !== 'dashboard' && (
-            <header className="mt-4 flex min-h-[82px] items-center gap-3 rounded-2xl bg-gradient-to-r from-[#0b8f4d] to-[#087640] px-4 py-4 text-white shadow-md sm:px-5">
-              <button type="button" onClick={() => setActiveMenu('dashboard')} aria-label="Kembali ke dashboard" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 text-white transition hover:bg-white hover:text-[#087640]"><ArrowLeft size={20}/></button>
+            <header className="mt-4 flex min-h-[82px] items-center gap-3 rounded-2xl bg-gradient-to-r from-[#0b408f] to-[#083476] px-4 py-4 text-white shadow-md sm:px-5">
+              <button type="button" onClick={() => setActiveMenu('dashboard')} aria-label="Kembali ke dashboard" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 text-white transition hover:bg-white hover:text-[#083476]"><ArrowLeft size={20}/></button>
               <div className="min-w-0"><p className="text-[10px] font-bold uppercase tracking-widest text-white/80">SIMPATIK FOR STUDENTS</p><h1 className="truncate text-lg font-black sm:text-xl">{activeLabel}</h1></div>
             </header>
           )}
           {activeMenu === 'dashboard' && (
-            <button type="button" onClick={() => setActiveMenu('ujian-form')} className="mb-5 flex min-h-[64px] w-full items-center gap-3 rounded-[22px] border border-[#b7e8cd] bg-white px-4 text-left text-slate-800 shadow-sm transition hover:border-[#8acda8] hover:bg-[#f8fcf9]">
-              <ClipboardCheck size={29} className="shrink-0 text-[#168052]"/>
+            <button type="button" onClick={() => setActiveMenu('ujian-form')} className="mb-5 flex min-h-[64px] w-full items-center gap-3 rounded-[22px] border border-[#b7cbe8] bg-white px-4 text-left text-slate-800 shadow-sm transition hover:border-[#8aa5cd] hover:bg-[#f8fafc]">
+              <ClipboardCheck size={29} className="shrink-0 text-[#164080]"/>
               <span className="flex-1 text-base font-extrabold">Lihat dan kerjakan Ujian</span>
-              <ArrowRight size={27} className="shrink-0 text-[#168052]"/>
+              <ArrowRight size={27} className="shrink-0 text-[#164080]"/>
             </button>
           )}
           {activeMenu === 'dashboard' && (
@@ -357,10 +357,10 @@ export const StudentPortalPage: React.FC = () => {
                 { label: 'Jurnal', icon: NotebookPen, value: '—', note: 'Data belum tersedia' },
                 { label: 'Pembayaran', icon: Wallet, value: '—', note: 'Data belum tersedia' },
               ].map(item => { const Icon = item.icon; return (
-                <article key={item.label} className="flex min-h-[154px] flex-col items-center justify-center rounded-[25px] border border-[#b7e8cd] bg-[#d0f1dc] px-3 py-4 text-center shadow-[0_2px_8px_rgba(8,127,73,0.04)]">
-                  <span className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-[#e3f7ec] text-[#087f49]"><Icon size={20}/></span>
+                <article key={item.label} className="flex min-h-[154px] flex-col items-center justify-center rounded-[25px] border border-[#b7cbe8] bg-[#d0ddf1] px-3 py-4 text-center shadow-[0_2px_8px_rgba(8,127,73,0.04)]">
+                  <span className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-[#e3ebf7] text-[#08387f]"><Icon size={20}/></span>
                   <h3 className="text-sm font-extrabold leading-5 text-slate-800">{item.label}</h3>
-                  <p className="mt-2 text-xl font-black tracking-tight text-[#087f49]">{item.value}</p>
+                  <p className="mt-2 text-xl font-black tracking-tight text-[#08387f]">{item.value}</p>
                   <p className="mt-0.5 text-[9px] leading-3 text-slate-500">{item.note}</p>
                 </article>
               ); })}
@@ -373,7 +373,7 @@ export const StudentPortalPage: React.FC = () => {
         </div>
 
 
-              <nav aria-label="Menu utama siswa" className="fixed inset-x-0 bottom-0 z-50 border-t border-[#d9eee2] bg-white/95 px-2 pb-[max(env(safe-area-inset-bottom),8px)] pt-2 shadow-[0_-8px_24px_rgba(8,127,73,0.08)] backdrop-blur">
+              <nav aria-label="Menu utama siswa" className="fixed inset-x-0 bottom-0 z-50 border-t border-[#d9e1ee] bg-white/95 px-2 pb-[max(env(safe-area-inset-bottom),8px)] pt-2 shadow-[0_-8px_24px_rgba(8,127,73,0.08)] backdrop-blur">
           <div className="mx-auto grid max-w-lg grid-cols-4 gap-1">
             {[
               { id: 'dashboard', label: 'Home', icon: GraduationCap },
@@ -381,7 +381,7 @@ export const StudentPortalPage: React.FC = () => {
               { id: 'profil', label: 'Profil', icon: UserRound },
               { id: 'keamanan', label: 'Akun', icon: ShieldCheck },
             ].map(item => { const Icon = item.icon; const selected = activeMenu === item.id; return (
-              <button key={item.id} type="button" onClick={() => selectMenu(item.id as StudentMenu)} aria-current={selected ? 'page' : undefined} className={'flex min-h-[54px] flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[11px] font-extrabold transition '+(selected ? (item.id === 'ujian-form' ? 'bg-[#dcfce7] text-[#166534] shadow-sm ring-1 ring-[#bbf7d0]' : 'bg-[#e3f7ec] text-[#087f49]') : 'text-slate-500 hover:bg-[#f5fbf7]')}>
+              <button key={item.id} type="button" onClick={() => selectMenu(item.id as StudentMenu)} aria-current={selected ? 'page' : undefined} className={'flex min-h-[54px] flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[11px] font-extrabold transition '+(selected ? (item.id === 'ujian-form' ? 'bg-[#dce9fc] text-[#163665] shadow-sm ring-1 ring-[#bbd3f7]' : 'bg-[#e3ebf7] text-[#08387f]') : 'text-slate-500 hover:bg-[#f5f7fb]')}>
                 <Icon size={20} strokeWidth={selected ? 2.5 : 2}/><span>{item.label}</span>
               </button>
             ); })}
@@ -392,26 +392,26 @@ export const StudentPortalPage: React.FC = () => {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[#e7f8ef] via-[#f9fcfa] to-[#eaf5ef] px-4 py-8">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[#e7eef8] via-[#f9fafc] to-[#eaeef5] px-4 py-8">
       <section className="relative w-full max-w-md overflow-hidden rounded-[30px] border border-white/90 bg-white shadow-[0_24px_75px_rgba(8,127,73,0.14)]">
-        <header className="bg-gradient-to-br from-[#087640] via-[#0b8f4d] to-[#20a968] px-6 py-9 text-center text-white">
+        <header className="bg-gradient-to-br from-[#083476] via-[#0b408f] to-[#2057a9] px-6 py-9 text-center text-white">
           <div className="mx-auto mb-5 flex h-28 w-28 items-center justify-center"><img src={`${import.meta.env.BASE_URL}logo-alwasi.png`} alt="Logo SMP Islam Al-Wasi’" className="h-full w-full object-contain"/></div>
           <p className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-white/85">SMP Islam Al-Wasi’</p>
           <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">SIMPATIK for Student</h1>
           <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-white/90">Selamat datang siswa-siswi terbaik SMP Islam Al-Wasi’</p>
         </header>
         <div className="grid gap-3 p-5 sm:p-6">
-          <button type="button" onClick={() => { setMessage(''); setView('register'); }} className="group flex w-full items-center gap-4 rounded-2xl border border-[#d9eee2] p-4 text-left transition hover:border-[#0b8f4d] hover:bg-[#f5fcf7]">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e3f7ec] text-[#087f49]"><UserRound size={23}/></span>
-            <span className="min-w-0 flex-1"><span className="block font-bold text-slate-800">Mendaftar</span><span className="mt-1 block text-xs leading-5 text-slate-500">Isi NISN, nama lengkap, dan pilih kelas. Tunggu persetujuan admin.</span></span><ArrowRight className="text-[#087f49]" size={19}/>
+          <button type="button" onClick={() => { setMessage(''); setView('register'); }} className="group flex w-full items-center gap-4 rounded-2xl border border-[#d9e1ee] p-4 text-left transition hover:border-[#0b408f] hover:bg-[#f5f8fc]">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e3ebf7] text-[#08387f]"><UserRound size={23}/></span>
+            <span className="min-w-0 flex-1"><span className="block font-bold text-slate-800">Mendaftar</span><span className="mt-1 block text-xs leading-5 text-slate-500">Isi NISN, nama lengkap, dan pilih kelas. Tunggu persetujuan admin.</span></span><ArrowRight className="text-[#08387f]" size={19}/>
           </button>
-          <button type="button" onClick={() => { setMessage(''); setView('login'); }} className="group flex w-full items-center gap-4 rounded-2xl border border-[#d9eee2] p-4 text-left transition hover:border-[#0b8f4d] hover:bg-[#f5fcf7]">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e3f7ec] text-[#087f49]"><KeyRound size={23}/></span>
-            <span className="min-w-0 flex-1"><span className="block font-bold text-slate-800">Masuk</span><span className="mt-1 block text-xs leading-5 text-slate-500">Untuk siswa yang sudah disetujui admin. Masuk menggunakan NISN.</span></span><ArrowRight className="text-[#087f49]" size={19}/>
+          <button type="button" onClick={() => { setMessage(''); setView('login'); }} className="group flex w-full items-center gap-4 rounded-2xl border border-[#d9e1ee] p-4 text-left transition hover:border-[#0b408f] hover:bg-[#f5f8fc]">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e3ebf7] text-[#08387f]"><KeyRound size={23}/></span>
+            <span className="min-w-0 flex-1"><span className="block font-bold text-slate-800">Masuk</span><span className="mt-1 block text-xs leading-5 text-slate-500">Untuk siswa yang sudah disetujui admin. Masuk menggunakan NISN.</span></span><ArrowRight className="text-[#08387f]" size={19}/>
           </button>
         </div>
-        {view === 'login' && <div className="border-t border-[#e7f1ea] px-5 py-5 sm:px-6"><div className="mb-3"><h2 className="font-bold text-slate-800">Masuk SIMPATIK for Student</h2><p className="mt-1 text-xs leading-5 text-slate-500">Masukkan NISN. Perangkat akan diingat setelah login berhasil.</p></div><form onSubmit={loginStudent} className="grid gap-3"><label className="grid gap-1.5 text-sm font-semibold text-slate-700">NISN<input value={nisn} onChange={e => setNisn(e.target.value.slice(0,30))} maxLength={30} required placeholder="Masukkan NISN" className="rounded-xl border border-slate-200 px-3 py-3 text-base outline-none focus:border-[#16a34a] focus:ring-2 focus:ring-[#e3f7ec]"/></label>{message && <p role="status" className="rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-800">{message}</p>}<button type="submit" disabled={busy} className="rounded-xl bg-[#0b8f4d] px-4 py-3 font-bold text-white transition hover:bg-[#087640] disabled:opacity-60">{busy ? 'Memeriksa NISN…' : 'Masuk'}</button></form></div>}
-        <footer className="border-t border-[#e7f1ea] px-5 py-4 text-center text-[11px] text-slate-400">Qurani, Ramah Anak dan Berkarakter · SIMPATIK</footer>
+        {view === 'login' && <div className="border-t border-[#e7ebf1] px-5 py-5 sm:px-6"><div className="mb-3"><h2 className="font-bold text-slate-800">Masuk SIMPATIK for Student</h2><p className="mt-1 text-xs leading-5 text-slate-500">Masukkan NISN. Perangkat akan diingat setelah login berhasil.</p></div><form onSubmit={loginStudent} className="grid gap-3"><label className="grid gap-1.5 text-sm font-semibold text-slate-700">NISN<input value={nisn} onChange={e => setNisn(e.target.value.slice(0,30))} maxLength={30} required placeholder="Masukkan NISN" className="rounded-xl border border-slate-200 px-3 py-3 text-base outline-none focus:border-[#164ea3] focus:ring-2 focus:ring-[#e3ebf7]"/></label>{message && <p role="status" className="rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-800">{message}</p>}<button type="submit" disabled={busy} className="rounded-xl bg-[#0b408f] px-4 py-3 font-bold text-white transition hover:bg-[#083476] disabled:opacity-60">{busy ? 'Memeriksa NISN…' : 'Masuk'}</button></form></div>}
+        <footer className="border-t border-[#e7ebf1] px-5 py-4 text-center text-[11px] text-slate-400">Qurani, Ramah Anak dan Berkarakter · SIMPATIK</footer>
       </section>
     </main>
   );
