@@ -250,12 +250,12 @@ export const StudentGoogleFormExams: React.FC<{
   };
 
   if (examRoom) {
-    if (loading || !selected || !attempt) return <main className="flex min-h-screen items-center justify-center bg-[#f7fbf8] p-5 text-center text-sm font-semibold text-slate-500">Menyiapkan ruang ujian SIMPATIK…</main>;
-    if (attempt.completedAt) return <main className="fixed inset-0 z-40 flex h-[100dvh] w-screen items-center justify-center overflow-auto bg-[#f7fbf8] p-5"><section className="w-full max-w-md rounded-2xl border border-blue-100 bg-white p-6 text-center shadow-sm"><CheckCircle2 className="mx-auto text-blue-600" size={42}/><h1 className="mt-3 text-xl font-black text-slate-800">Ujian telah ditandai selesai</h1><p className="mt-2 text-sm leading-6 text-slate-500">Terima kasih. Status ini merupakan konfirmasi dari siswa; SIMPATIK tidak dapat membaca tombol Kirim Google Forms secara langsung.</p><button type="button" onClick={returnToStudentPortal} className="mt-5 w-full rounded-xl bg-[#087f49] px-4 py-3 text-sm font-extrabold text-white">Kembali ke Dashboard</button></section></main>;
+    if (loading || !selected || !attempt) return <main className="flex min-h-screen items-center justify-center bg-[#f7f9fb] p-5 text-center text-sm font-semibold text-slate-500">Menyiapkan ruang ujian SIMPATIK…</main>;
+    if (attempt.completedAt) return <main className="fixed inset-0 z-40 flex h-[100dvh] w-screen items-center justify-center overflow-auto bg-[#f7f9fb] p-5"><section className="w-full max-w-md rounded-2xl border border-blue-100 bg-white p-6 text-center shadow-sm"><CheckCircle2 className="mx-auto text-blue-600" size={42}/><h1 className="mt-3 text-xl font-black text-slate-800">Ujian telah ditandai selesai</h1><p className="mt-2 text-sm leading-6 text-slate-500">Terima kasih. Status ini merupakan konfirmasi dari siswa; SIMPATIK tidak dapat membaca tombol Kirim Google Forms secara langsung.</p><button type="button" onClick={returnToStudentPortal} className="mt-5 w-full rounded-xl bg-[#08387f] px-4 py-3 text-sm font-extrabold text-white">Kembali ke Dashboard</button></section></main>;
     return (
-      <main className="fixed inset-0 z-40 h-[100dvh] w-screen overflow-hidden bg-[#f7fbf8]">
+      <main className="fixed inset-0 z-40 h-[100dvh] w-screen overflow-hidden bg-[#f7f9fb]">
         {timeWarningOpen && <div role="alert" className="fixed right-3 top-[80px] z-[70] w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-amber-300 bg-amber-50 p-4 text-amber-950 shadow-xl"><div className="flex items-start justify-between gap-3"><div><p className="text-sm font-extrabold">Peringatan waktu ujian</p><p className="mt-2 text-sm leading-6">Waktu pengerjaan tinggal <strong>10 menit</strong>. Segera periksa jawaban dan tekan tombol <strong>Kirim</strong> pada Google Form sebelum waktu habis.</p></div><button type="button" aria-label="Tutup peringatan" onClick={() => setTimeWarningOpen(false)} className="shrink-0 rounded-lg px-2 py-1 text-lg font-bold text-amber-900 hover:bg-amber-100">×</button></div><button type="button" onClick={() => setTimeWarningOpen(false)} className="mt-3 rounded-lg bg-amber-800 px-3 py-2 text-xs font-bold text-white hover:bg-amber-900">Mengerti</button></div>}
-        <header className="fixed inset-x-0 top-0 z-50 w-full bg-[#087f49] px-3 pb-2 pt-[max(7px,env(safe-area-inset-top))] text-white shadow-md">
+        <header className="fixed inset-x-0 top-0 z-50 w-full bg-[#08387f] px-3 pb-2 pt-[max(7px,env(safe-area-inset-top))] text-white shadow-md">
           <div className="relative mb-1 flex items-center justify-center">
             <h1 className="text-center text-sm font-black tracking-wider">SIMPATIK EXAM</h1>
 
@@ -273,8 +273,8 @@ export const StudentGoogleFormExams: React.FC<{
           {examExpired && <div className="absolute inset-0 z-30 flex items-center justify-center bg-rose-50 p-5 text-center"><div className="max-w-md rounded-2xl border border-rose-200 bg-white p-6 shadow-lg"><h2 className="text-xl font-black text-rose-800">Waktu ujian telah habis</h2><p className="mt-2 text-sm text-slate-600">Selesaikan konfirmasi untuk menandai ujian telah berakhir.</p></div></div>}
           {!isLocked && !examExpired && <iframe title={selected.title} src={selectedFormUrl} className="block h-full w-full border-0 bg-white" referrerPolicy="strict-origin-when-cross-origin" allow="camera; microphone; geolocation"/>}
         </section>
-        <footer className="fixed inset-x-0 bottom-0 z-50 w-full bg-white px-3 pb-[max(6px,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-4px_16px_rgba(0,0,0,0.12)]"><button type="button" onClick={() => setConfirmStep(1)} disabled={Boolean(attempt.completedAt)} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#087f49] px-4 py-3 text-sm font-black text-white shadow-sm disabled:opacity-60"><CheckCircle2 size={18}/> Selesaikan Ujian</button></footer>
-        {confirmStep > 0 && <div role="dialog" aria-modal="true" aria-labelledby="exam-confirm-title" className="fixed inset-0 z-[100] flex items-center justify-center bg-black/65 p-4"><div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-[#087f49]"><CheckCircle2 size={30}/></div>{confirmStep === 1 ? <><h2 id="exam-confirm-title" className="mt-4 text-center text-lg font-black text-slate-900">Apakah Anda telah mengirim jawaban Google Form?</h2><div className="mt-6 grid grid-cols-2 gap-3"><button type="button" onClick={() => setConfirmStep(2)} className="rounded-xl bg-[#087f49] px-4 py-3 text-sm font-extrabold text-white">Ya</button><button type="button" onClick={() => setConfirmStep(0)} className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-extrabold text-slate-700">Belum</button></div></> : <><h2 id="exam-confirm-title" className="mt-4 text-center text-lg font-black text-slate-900">Yakin selesaikan ujian?</h2><p className="mt-2 text-center text-sm leading-6 text-slate-500">Setelah dikonfirmasi, ruang ujian akan ditandai selesai.</p><div className="mt-6 grid grid-cols-2 gap-3"><button type="button" onClick={() => { setConfirmStep(0); finishExam(); }} className="rounded-xl bg-[#087f49] px-4 py-3 text-sm font-extrabold text-white">Ya</button><button type="button" onClick={() => setConfirmStep(0)} className="rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-extrabold text-slate-700">Kembali Ke Ujian</button></div></>}</div></div>}
+        <footer className="fixed inset-x-0 bottom-0 z-50 w-full bg-white px-3 pb-[max(6px,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-4px_16px_rgba(0,0,0,0.12)]"><button type="button" onClick={() => setConfirmStep(1)} disabled={Boolean(attempt.completedAt)} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#08387f] px-4 py-3 text-sm font-black text-white shadow-sm disabled:opacity-60"><CheckCircle2 size={18}/> Selesaikan Ujian</button></footer>
+        {confirmStep > 0 && <div role="dialog" aria-modal="true" aria-labelledby="exam-confirm-title" className="fixed inset-0 z-[100] flex items-center justify-center bg-black/65 p-4"><div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-[#08387f]"><CheckCircle2 size={30}/></div>{confirmStep === 1 ? <><h2 id="exam-confirm-title" className="mt-4 text-center text-lg font-black text-slate-900">Apakah Anda telah mengirim jawaban Google Form?</h2><div className="mt-6 grid grid-cols-2 gap-3"><button type="button" onClick={() => setConfirmStep(2)} className="rounded-xl bg-[#08387f] px-4 py-3 text-sm font-extrabold text-white">Ya</button><button type="button" onClick={() => setConfirmStep(0)} className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-extrabold text-slate-700">Belum</button></div></> : <><h2 id="exam-confirm-title" className="mt-4 text-center text-lg font-black text-slate-900">Yakin selesaikan ujian?</h2><p className="mt-2 text-center text-sm leading-6 text-slate-500">Setelah dikonfirmasi, ruang ujian akan ditandai selesai.</p><div className="mt-6 grid grid-cols-2 gap-3"><button type="button" onClick={() => { setConfirmStep(0); finishExam(); }} className="rounded-xl bg-[#08387f] px-4 py-3 text-sm font-extrabold text-white">Ya</button><button type="button" onClick={() => setConfirmStep(0)} className="rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-extrabold text-slate-700">Kembali Ke Ujian</button></div></>}</div></div>}
       </main>
     );
 
@@ -316,7 +316,7 @@ export const StudentGoogleFormExams: React.FC<{
           { id: 'finished' as const, label: 'Selesai' },
         ].map(tab => (
           <button key={tab.id} type="button" role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)}
-            className={'min-h-11 rounded-xl px-2 text-xs font-bold transition-colors duration-200 ' + (activeTab === tab.id ? 'bg-white text-[#166534] shadow-sm' : 'text-[#64748B] hover:text-[#334155]')}>
+            className={'min-h-11 rounded-xl px-2 text-xs font-bold transition-colors duration-200 ' + (activeTab === tab.id ? 'bg-white text-[#163665] shadow-sm' : 'text-[#64748B] hover:text-[#334155]')}>
             {tab.label}{tab.count !== undefined ? ' (' + tab.count + ')' : ''}
           </button>
         ))}
@@ -336,13 +336,13 @@ export const StudentGoogleFormExams: React.FC<{
         <section role="alert" className="rounded-2xl border border-rose-100 bg-white p-6 text-center shadow-sm">
           <CircleAlert size={28} className="mx-auto text-rose-500"/>
           <p className="mt-3 text-sm font-semibold text-[#334155]">{loadError}</p>
-          <button type="button" onClick={() => { setLoading(true); setRetryCount(value => value + 1); }} className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#166534] px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#15803d]">
+          <button type="button" onClick={() => { setLoading(true); setRetryCount(value => value + 1); }} className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#163665] px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#154080]">
             <RefreshCw size={16}/> Coba lagi
           </button>
         </section>
       ) : visibleExams.length === 0 ? (
         <section className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-[#CBD5E1] bg-white px-5 py-8 text-center">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#dcfce7] text-[#166534]">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#dce9fc] text-[#163665]">
             {activeTab === 'active' ? <ClipboardList size={22}/> : activeTab === 'upcoming' ? <CalendarDays size={22}/> : <CheckCircle2 size={22}/>}
           </span>
           <p className="mt-3 text-sm font-semibold text-[#334155]">
@@ -357,7 +357,7 @@ export const StudentGoogleFormExams: React.FC<{
             const questionCount = Number(exam.questionCount ?? exam.totalQuestions ?? 0);
             const examUrl = embedUrl(exam.formUrl, nisn, studentId, studentName, className);
             return (
-              <article key={exam.id} className="overflow-hidden rounded-[20px] bg-gradient-to-br from-[#166534] to-[#15803d] p-4 text-white shadow-[0_12px_26px_rgba(22,101,52,0.16)]">
+              <article key={exam.id} className="overflow-hidden rounded-[20px] bg-gradient-to-br from-[#163665] to-[#154080] p-4 text-white shadow-[0_12px_26px_rgba(22,101,52,0.16)]">
                 <div className="inline-flex rounded-full bg-[#FBBF24] px-3 py-1 text-[11px] font-bold text-[#422006]">Sedang berlangsung</div>
                 <h2 className="mt-3 text-xl font-bold leading-6 text-white">{exam.title}</h2>
                 <p className="mt-1 text-xs text-white/85">{exam.subject || 'Ujian'} · Kelas {exam.className}</p>
@@ -381,7 +381,7 @@ export const StudentGoogleFormExams: React.FC<{
                 {!examUrl ? (
                   <div role="alert" className="mt-4 rounded-xl bg-white/15 px-3 py-3 text-xs leading-5 text-white">Tautan ujian belum valid. Hubungi guru untuk memeriksanya.</div>
                 ) : (
-                  <button type="button" onClick={() => inProgress ? continueExam(exam) : startExam(exam)} className="mt-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#166534] transition-colors duration-200 hover:bg-[#f0fdf4]">
+                  <button type="button" onClick={() => inProgress ? continueExam(exam) : startExam(exam)} className="mt-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#163665] transition-colors duration-200 hover:bg-[#f0f5fd]">
                     {inProgress ? 'Lanjutkan Ujian' : 'Mulai Ujian'}
                   </button>
                 )}
@@ -396,7 +396,7 @@ export const StudentGoogleFormExams: React.FC<{
             const dateParts = formatDateParts(exam.startAt!);
             return (
               <article key={exam.id} className="flex gap-3 rounded-2xl border border-[#E2E8F0] bg-white p-3 shadow-sm">
-                <div className="flex w-[62px] shrink-0 flex-col items-center justify-center rounded-xl bg-[#dcfce7] px-2 py-3 text-[#166534]">
+                <div className="flex w-[62px] shrink-0 flex-col items-center justify-center rounded-xl bg-[#dce9fc] px-2 py-3 text-[#163665]">
                   <span className="text-2xl font-bold leading-7">{dateParts.day}</span>
                   <span className="mt-0.5 text-[10px] font-bold tracking-wide">{dateParts.month}</span>
                 </div>
@@ -416,12 +416,12 @@ export const StudentGoogleFormExams: React.FC<{
             const savedAttempt = getExamAttempt(exam);
             return (
               <article key={exam.id} className="flex items-center gap-3 rounded-2xl border border-[#E2E8F0] bg-white p-4 shadow-sm">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#dcfce7] text-[#166534]"><CheckCircle2 size={21}/></span>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#dce9fc] text-[#163665]"><CheckCircle2 size={21}/></span>
                 <div className="min-w-0 flex-1">
                   <h2 className="text-sm font-semibold leading-5 text-[#0F172A]">{exam.title}</h2>
                   <p className="mt-1 text-xs text-[#64748B]">{savedAttempt?.completedAt ? 'Selesai ' + formatDate(savedAttempt.completedAt) : 'Selesai'}</p>
                 </div>
-                <span className="shrink-0 rounded-full bg-[#dcfce7] px-3 py-1.5 text-xs font-bold text-[#166534]">Menunggu nilai</span>
+                <span className="shrink-0 rounded-full bg-[#dce9fc] px-3 py-1.5 text-xs font-bold text-[#163665]">Menunggu nilai</span>
               </article>
             );
           })}
