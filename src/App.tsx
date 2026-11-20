@@ -8,7 +8,7 @@ function StudentAppContent() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#f7fbf8]">
+      <main className="flex min-h-screen items-center justify-center bg-[#f7f9fb]">
         <div className="text-center">
           <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-blue-100 border-t-blue-700" />
           <p className="text-sm font-medium text-slate-500">SIMPATIK for Students sedang dipersiapkan…</p>
