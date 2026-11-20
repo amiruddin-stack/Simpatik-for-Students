@@ -11,7 +11,7 @@ export const ExamHubPage: React.FC = () => {
   if (section === 'simpatik') {
     return (
       <section className="space-y-4">
-        <button type="button" onClick={() => setSection('home')} className="inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-bold text-[#087F49] hover:bg-[#E3F7EC]">
+        <button type="button" onClick={() => setSection('home')} className="inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-bold text-[#087f49] hover:bg-[#e3f7ec]">
           <ArrowLeft size={18}/> Kembali ke Ujian
         </button>
         <ExamPage onBack={() => setSection('home')} />
@@ -22,7 +22,7 @@ export const ExamHubPage: React.FC = () => {
   if (section === 'gform') {
     return (
       <section className="space-y-4">
-        <button type="button" onClick={() => setSection('home')} className="inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-bold text-[#087F49] hover:bg-[#E3F7EC]">
+        <button type="button" onClick={() => setSection('home')} className="inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-bold text-[#087f49] hover:bg-[#e3f7ec]">
           <ArrowLeft size={18}/> Kembali ke Ujian
         </button>
         <GoogleFormExamPage />
@@ -35,11 +35,11 @@ export const ExamHubPage: React.FC = () => {
       <p className="text-sm text-slate-500">Pilih jenis ujian yang akan dikelola. Semua fitur ujian tersedia dalam satu pintu masuk.</p>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <button type="button" onClick={() => setSection('simpatik')} className="group rounded-2xl border border-[#BFE8CF] bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-[#16B364] hover:shadow-md sm:p-6">
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E3F7EC] text-[#087F49]"><MonitorSmartphone size={25}/></span>
+        <button type="button" onClick={() => setSection('simpatik')} className="group rounded-2xl border border-[#bfe8cf] bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-[#16b364] hover:shadow-md sm:p-6">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e3f7ec] text-[#087f49]"><MonitorSmartphone size={25}/></span>
           <span className="mt-4 block text-lg font-extrabold text-slate-800">Ujian SIMPATIK</span>
           <span className="mt-2 block text-sm leading-6 text-slate-500">Kelola ujian dari sistem SIMPATIK, termasuk seluruh fitur ujian yang sudah tersedia saat ini.</span>
-          <span className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-[#087F49]">Buka Ujian SIMPATIK <FileText size={16}/></span>
+          <span className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-[#087f49]">Buka Ujian SIMPATIK <FileText size={16}/></span>
         </button>
 
         <button type="button" onClick={() => setSection('gform')} className="group rounded-2xl border border-[#C9DDF8] bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md sm:p-6">
