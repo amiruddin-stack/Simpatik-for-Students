@@ -308,8 +308,6 @@ export const StudentGoogleFormExams: React.FC<{
     return !savedAttempt?.completedAt && getScheduleStart(exam) <= now && (!end || end >= now);
   });
   const visibleExams = activeTab === 'active' ? activeExams : activeTab === 'upcoming' ? upcomingExams : finishedExams;
-  const formatDate = (value: string | number, options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' }) =>
-    new Intl.DateTimeFormat('id-ID', options).format(new Date(value));
   const formatDeadline = (value?: string) => value ? formatDate(value, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Tidak ditentukan';
   const formatDate = (value: any, options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' }) => {
     const date = toDate(value);
@@ -424,7 +422,7 @@ export const StudentGoogleFormExams: React.FC<{
       ) : activeTab === 'upcoming' ? (
         <div className="space-y-5">
           {Object.values(upcomingByDay).map(group => (
-            <section key={group.date} className="space-y-2.5">
+            <section key={group.date.toISOString()} className="space-y-2.5">
               <h2 className="text-sm font-bold capitalize text-[#163665]">{formatDayHeading(group.date)}</h2>
               <div className="space-y-2">
                 {group.exams.map(exam => {
