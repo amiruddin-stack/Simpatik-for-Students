@@ -431,7 +431,7 @@ export const StudentGoogleFormExams: React.FC<{
                         </div>
                         <div className="min-w-0 flex-1 py-1">
                           <h3 className="text-lg font-extrabold leading-6 text-[#0F172A]">{exam.subject || 'Mata Pelajaran'}</h3>
-                          <p className="mt-1 text-xs font-medium text-[#64748B]">Asesmen {exam.className}</p>
+                          <p className="mt-1 text-xs font-medium text-[#64748B]">{exam.examType || 'Jenis ujian'}</p>
                           <span className="mt-2 inline-flex rounded-full bg-[#F1F5F9] px-2.5 py-1 text-[10px] font-semibold text-[#64748B]">Terjadwal</span>
                         </div>
                       </div>
