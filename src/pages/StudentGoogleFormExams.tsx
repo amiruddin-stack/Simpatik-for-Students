@@ -316,11 +316,7 @@ export const StudentGoogleFormExams: React.FC<{
   const formatDayHeading = (value: any) => formatDate(value, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const formatExamTime = (exam: StudentFormExam) => {
     const start = toDate(exam.startAt);
-    if (!start) return { startText: '--:--', endText: '--:--' };
-    const startText = formatDate(start, { hour: '2-digit', minute: '2-digit' });
-    const end = toDate(exam.endAt) || new Date(start.getTime() + (Math.max(1, exam.duration || 60) * 60 * 1000));
-    const endText = formatDate(end, { hour: '2-digit', minute: '2-digit' });
-    return { startText, endText };
+    return start ? formatDate(start, { hour: '2-digit', minute: '2-digit' }) : '--:--';
   };
   const upcomingByDay = upcomingExams.slice().sort((a, b) => getScheduleStart(a) - getScheduleStart(b)).reduce((groups, exam) => {
     const date = toDate(exam.startAt);
@@ -431,12 +427,11 @@ export const StudentGoogleFormExams: React.FC<{
                     <article key={exam.id} className="rounded-2xl border border-[#E2E8F0] bg-white p-3 shadow-sm">
                       <div className="flex items-stretch gap-3">
                         <div className="flex w-[104px] shrink-0 flex-col items-center justify-center rounded-xl bg-[#E3F7EC] px-2 py-3 text-[#176B40]">
-                          <span className="text-2xl font-extrabold leading-7 tabular-nums">{time.startText}</span>
-                          <span className="mt-1 text-xs font-semibold tabular-nums">{time.endText}</span>
+                          <span className="text-2xl font-extrabold leading-7 tabular-nums">{time}</span>
                         </div>
                         <div className="min-w-0 flex-1 py-1">
                           <h3 className="text-lg font-extrabold leading-6 text-[#0F172A]">{exam.subject || 'Mata Pelajaran'}</h3>
-                          <p className="mt-1 text-xs font-medium text-[#64748B]">Kelas {exam.className}</p>
+                          <p className="mt-1 text-xs font-medium text-[#64748B]">Asesmen {exam.className}</p>
                           <span className="mt-2 inline-flex rounded-full bg-[#F1F5F9] px-2.5 py-1 text-[10px] font-semibold text-[#64748B]">Terjadwal</span>
                         </div>
                       </div>
