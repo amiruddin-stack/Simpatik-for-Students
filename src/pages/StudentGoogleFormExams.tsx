@@ -281,8 +281,22 @@ export const StudentGoogleFormExams: React.FC<{
   }
 
   const getExamAttempt = (exam: StudentFormExam) => readAttempt(attemptStorageKey(exam.id, studentId, nisn));
-  const getScheduleStart = (exam: StudentFormExam) => exam.startAt ? new Date(exam.startAt).getTime() : 0;
-  const getScheduleEnd = (exam: StudentFormExam) => exam.endAt ? new Date(exam.endAt).getTime() : 0;
+  const toDate = (value: any): Date | null => {
+    if (!value) return null;
+    if (value instanceof Date) return isNaN(value.getTime()) ? null : value;
+    if (typeof value?.toDate === 'function') {
+      const converted = value.toDate();
+      return converted instanceof Date && !isNaN(converted.getTime()) ? converted : null;
+    }
+    if (typeof value === 'object' && typeof value.seconds === 'number') {
+      const converted = new Date(value.seconds * 1000);
+      return isNaN(converted.getTime()) ? null : converted;
+    }
+    const converted = new Date(value);
+    return isNaN(converted.getTime()) ? null : converted;
+  };
+  const getScheduleStart = (exam: StudentFormExam) => toDate(exam.startAt)?.getTime() || 0;
+  const getScheduleEnd = (exam: StudentFormExam) => toDate(exam.endAt)?.getTime() || 0;
   const upcomingExams = exams.filter(exam => {
     const startedAttempt = getExamAttempt(exam);
     return !startedAttempt?.completedAt && Boolean(exam.startAt) && getScheduleStart(exam) > now;
@@ -297,22 +311,27 @@ export const StudentGoogleFormExams: React.FC<{
   const formatDate = (value: string | number, options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' }) =>
     new Intl.DateTimeFormat('id-ID', options).format(new Date(value));
   const formatDeadline = (value?: string) => value ? formatDate(value, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Tidak ditentukan';
-  const formatDayHeading = (value: string) => formatDate(value, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const formatDate = (value: any, options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' }) => {
+    const date = toDate(value);
+    return date ? new Intl.DateTimeFormat('id-ID', options).format(date) : 'Tanggal tidak valid';
+  };
+  const formatDayHeading = (value: any) => formatDate(value, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const formatExamTime = (exam: StudentFormExam) => {
-    const start = new Date(exam.startAt!);
+    const start = toDate(exam.startAt);
+    if (!start) return { startText: '--:--', endText: '--:--' };
     const startText = formatDate(start, { hour: '2-digit', minute: '2-digit' });
-    const end = exam.endAt
-      ? formatDate(exam.endAt, { hour: '2-digit', minute: '2-digit' })
-      : formatDate(start.getTime() + (Math.max(1, exam.duration || 60) * 60 * 1000), { hour: '2-digit', minute: '2-digit' });
+    const end = toDate(exam.endAt) || new Date(start.getTime() + (Math.max(1, exam.duration || 60) * 60 * 1000));
+    const endText = formatDate(end, { hour: '2-digit', minute: '2-digit' });
     return { startText, endText };
   };
   const upcomingByDay = upcomingExams.slice().sort((a, b) => getScheduleStart(a) - getScheduleStart(b)).reduce((groups, exam) => {
-    const date = new Date(exam.startAt!);
+    const date = toDate(exam.startAt);
+    if (!date) return groups;
     const key = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
-    if (!groups[key]) groups[key] = { date: exam.startAt!, exams: [] as StudentFormExam[] };
+    if (!groups[key]) groups[key] = { date, exams: [] as StudentFormExam[] };
     groups[key].exams.push(exam);
     return groups;
-  }, {} as Record<string, { date: string; exams: StudentFormExam[] }>);
+  }, {} as Record<string, { date: Date; exams: StudentFormExam[] }>);
 
   return (
     <div className="min-w-0 space-y-5 pb-[calc(88px+env(safe-area-inset-bottom))] text-[#0F172A]">
