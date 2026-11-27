@@ -297,10 +297,22 @@ export const StudentGoogleFormExams: React.FC<{
   const formatDate = (value: string | number, options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' }) =>
     new Intl.DateTimeFormat('id-ID', options).format(new Date(value));
   const formatDeadline = (value?: string) => value ? formatDate(value, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Tidak ditentukan';
-  const formatDateParts = (value: string) => ({
-    day: formatDate(value, { day: '2-digit' }),
-    month: formatDate(value, { month: 'short' }).replace('.', '').toUpperCase(),
-  });
+  const formatDayHeading = (value: string) => formatDate(value, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const formatExamTime = (exam: StudentFormExam) => {
+    const start = new Date(exam.startAt!);
+    const startText = formatDate(start, { hour: '2-digit', minute: '2-digit' });
+    const end = exam.endAt
+      ? formatDate(exam.endAt, { hour: '2-digit', minute: '2-digit' })
+      : formatDate(start.getTime() + (Math.max(1, exam.duration || 60) * 60 * 1000), { hour: '2-digit', minute: '2-digit' });
+    return { startText, endText };
+  };
+  const upcomingByDay = upcomingExams.slice().sort((a, b) => getScheduleStart(a) - getScheduleStart(b)).reduce((groups, exam) => {
+    const date = new Date(exam.startAt!);
+    const key = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
+    if (!groups[key]) groups[key] = { date: exam.startAt!, exams: [] as StudentFormExam[] };
+    groups[key].exams.push(exam);
+    return groups;
+  }, {} as Record<string, { date: string; exams: StudentFormExam[] }>);
 
   return (
     <div className="min-w-0 space-y-5 pb-[calc(88px+env(safe-area-inset-bottom))] text-[#0F172A]">
@@ -391,24 +403,32 @@ export const StudentGoogleFormExams: React.FC<{
           })}
         </div>
       ) : activeTab === 'upcoming' ? (
-        <div className="space-y-3">
-          {upcomingExams.map(exam => {
-            const dateParts = formatDateParts(exam.startAt!);
-            return (
-              <article key={exam.id} className="flex gap-3 rounded-2xl border border-[#E2E8F0] bg-white p-3 shadow-sm">
-                <div className="flex w-[62px] shrink-0 flex-col items-center justify-center rounded-xl bg-[#dce9fc] px-2 py-3 text-[#163665]">
-                  <span className="text-2xl font-bold leading-7">{dateParts.day}</span>
-                  <span className="mt-0.5 text-[10px] font-bold tracking-wide">{dateParts.month}</span>
-                </div>
-                <div className="min-w-0 flex-1 py-1">
-                  <h2 className="text-sm font-semibold leading-5 text-[#0F172A]">{exam.title}</h2>
-                  <p className="mt-1 text-xs text-[#64748B]">{formatDate(exam.startAt!, { hour: '2-digit', minute: '2-digit' })} · {exam.duration || 60} menit</p>
-                  <p className="mt-1 text-xs text-[#64748B]">{exam.subject || 'Ujian'} · Kelas {exam.className}</p>
-                  <span className="mt-2 inline-flex rounded-full bg-[#F1F5F9] px-2.5 py-1 text-[10px] font-semibold text-[#64748B]">Terjadwal</span>
-                </div>
-              </article>
-            );
-          })}
+        <div className="space-y-5">
+          {Object.values(upcomingByDay).map(group => (
+            <section key={group.date} className="space-y-2.5">
+              <h2 className="text-sm font-bold capitalize text-[#163665]">{formatDayHeading(group.date)}</h2>
+              <div className="space-y-2">
+                {group.exams.map(exam => {
+                  const time = formatExamTime(exam);
+                  return (
+                    <article key={exam.id} className="rounded-2xl border border-[#E2E8F0] bg-white p-3 shadow-sm">
+                      <div className="flex items-stretch gap-3">
+                        <div className="flex w-[104px] shrink-0 flex-col items-center justify-center rounded-xl bg-[#E3F7EC] px-2 py-3 text-[#176B40]">
+                          <span className="text-2xl font-extrabold leading-7 tabular-nums">{time.startText}</span>
+                          <span className="mt-1 text-xs font-semibold tabular-nums">{time.endText}</span>
+                        </div>
+                        <div className="min-w-0 flex-1 py-1">
+                          <h3 className="text-lg font-extrabold leading-6 text-[#0F172A]">{exam.subject || 'Mata Pelajaran'}</h3>
+                          <p className="mt-1 text-xs font-medium text-[#64748B]">Kelas {exam.className}</p>
+                          <span className="mt-2 inline-flex rounded-full bg-[#F1F5F9] px-2.5 py-1 text-[10px] font-semibold text-[#64748B]">Terjadwal</span>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
         </div>
       ) : (
         <div className="space-y-3">
