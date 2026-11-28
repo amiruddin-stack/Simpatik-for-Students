@@ -208,13 +208,13 @@ export const StudentGoogleFormExams: React.FC<{
         return next;
       });
     };
+    // Do not treat window blur as a violation: Android can blur the page when
+    // the screen automatically turns off while a student is reading.
+    // Count only an actual page visibility transition to hidden (tab/app switch).
     const onVisibility = () => { if (document.visibilityState === 'hidden') registerExit(); };
-    const onBlur = () => registerExit();
     document.addEventListener('visibilitychange', onVisibility);
-    window.addEventListener('blur', onBlur);
     return () => {
       document.removeEventListener('visibilitychange', onVisibility);
-      window.removeEventListener('blur', onBlur);
     };
   }, [examRoom, selected?.id, attempt?.startedAt, attempt?.lastExitAt, selected?.enablePenalty, examExpired, storageKey]);
 
