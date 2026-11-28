@@ -153,6 +153,36 @@ export const StudentGoogleFormExams: React.FC<{
     }
   }, [examRoom, started, selected?.id, selected?.enableCountdown, remainingExam]);
 
+  // Keep the device screen awake while the student is actively in the exam room.
+  // This prevents automatic screen timeout during long reading periods from triggering false violations.
+  useEffect(() => {
+    if (!examRoom || !started || !selected || attempt?.completedAt) return;
+    let cancelled = false;
+    let wakeLock: any = null;
+    const requestWakeLock = async () => {
+      if (cancelled || document.visibilityState !== 'visible') return;
+      try {
+        const wakeLockApi = (navigator as any).wakeLock;
+        if (!wakeLockApi?.request) return;
+        wakeLock = await wakeLockApi.request('screen');
+        wakeLock.addEventListener?.('release', () => { wakeLock = null; });
+      } catch (error) {
+        // Wake Lock may be unsupported or denied; keep the exam usable.
+        console.info('Screen Wake Lock tidak tersedia:', error);
+      }
+    };
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') void requestWakeLock();
+    };
+    void requestWakeLock();
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      cancelled = true;
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      try { if (wakeLock && !wakeLock.released) void wakeLock.release(); } catch { /* ignore release errors */ }
+    };
+  }, [examRoom, started, selected?.id, attempt?.completedAt]);
+
   useEffect(() => {
     if (!examRoom || !selected || !attempt || !selected.enablePenalty || examExpired || attempt.completedAt) return;
     let lastHandled = attempt.lastExitAt || 0;
