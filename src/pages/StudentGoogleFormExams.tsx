@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, doc, onSnapshot, query, setDoc, updateDoc, serverTimestamp, where } from 'firebase/firestore';
 import { CalendarDays, CheckCircle2, CircleAlert, ClipboardList, Clock3, FileText, RefreshCw, ShieldAlert } from 'lucide-react';
-import { db } from '../firebase/config';
+import { auth, db } from '../firebase/config';
 import { getClassLevel } from '../lib/classes';
 
 type StudentFormExam = {
@@ -24,6 +24,7 @@ type StudentFormExam = {
 };
 
 type ExamAttempt = { startedAt: number; lockUntil: number; violations: number; lastExitAt: number; completedAt?: number };
+type ExamParticipantControl = { examId: string; studentId: string; ownerUid?: string; blocked?: boolean; resetVersion?: number; completedAt?: any };
 
 const NISN_PREFILL_MARKER = 'SIMPATIK_NISN_PREFILL';
 const PENALTY_MS = 3 * 60 * 1000;
@@ -94,6 +95,8 @@ export const StudentGoogleFormExams: React.FC<{
   const classLevel = getClassLevel(className);
   const examRoom = Boolean(examRoomId);
   const [exams, setExams] = useState<StudentFormExam[]>([]);
+  const [participantControls, setParticipantControls] = useState<Record<string, ExamParticipantControl>>({});
+  const [participantControlError, setParticipantControlError] = useState('');
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState(examRoomId || '');
   const [attempt, setAttempt] = useState<ExamAttempt | null>(null);
@@ -106,6 +109,8 @@ export const StudentGoogleFormExams: React.FC<{
   const [timeWarningOpen, setTimeWarningOpen] = useState(false);
   const timeWarningExamRef = useRef('');
   const selected = exams.find(item => item.id === selectedId);
+  const selectedControl = selected ? participantControls[selected.id] : undefined;
+  const selectedBlocked = Boolean(selectedControl?.blocked);
   const storageKey = selected ? attemptStorageKey(selected.id, studentId, nisn) : '';
   const selectedFormUrl = selected ? embedUrl(selected.formUrl, nisn, studentId, studentName, className) : '';
   const started = Boolean(attempt && !attempt.completedAt);
@@ -135,6 +140,77 @@ export const StudentGoogleFormExams: React.FC<{
     });
     return stop;
   }, [classLevel, examRoomId, retryCount]);
+  
+  // Connect this student's record to teacher controls and listen for changes in real time.
+  useEffect(() => {
+    if (!auth.currentUser || !studentId || !exams.length) { setParticipantControls({}); return; }
+    let cancelled = false;
+    const stops: Array<() => void> = [];
+    setParticipantControlError('');
+    const uid = auth.currentUser.uid;
+    const syncExamControl = async (exam: StudentFormExam) => {
+      const controlRef = doc(db, 'googleFormExamParticipants', exam.id + '_' + studentId);
+      try {
+        // Claim existing teacher-created control by changing only ownerUid.
+        try { await updateDoc(controlRef, { ownerUid: uid }); }
+        catch (claimError) {
+          // Create a minimal default participant control only if it is missing.
+          await setDoc(controlRef, { examId: exam.id, studentId, ownerUid: uid, blocked: false, resetVersion: 0, updatedAt: new Date().toISOString() });
+        }
+        if (cancelled) return;
+        const stop = onSnapshot(controlRef, snapshot => {
+          if (snapshot.exists()) setParticipantControls(current => ({ ...current, [exam.id]: snapshot.data() as ExamParticipantControl }));
+        }, error => {
+          console.error('Gagal menyinkronkan kontrol peserta ujian:', error);
+          setParticipantControlError('Kontrol peserta belum tersinkron. Hubungi guru jika ujian tidak dapat dibuka.');
+        });
+        stops.push(stop);
+      } catch (error) {
+        console.error('Gagal menghubungkan kontrol peserta:', error);
+        if (!cancelled) setParticipantControlError('Kontrol ujian belum tersambung. Periksa Rules Firestore atau koneksi internet.');
+      }
+    };
+    exams.forEach(exam => { void syncExamControl(exam); });
+    return () => { cancelled = true; stops.forEach(stop => stop()); };
+  }, [exams, studentId]);
+
+  // Apply teacher restartVersion changes to the local attempt on this device.
+  useEffect(() => {
+    exams.forEach(exam => {
+      const control = participantControls[exam.id];
+      if (!control) return;
+      const version = Number(control.resetVersion || 0);
+      const versionKey = 'simpatik_gform_reset_version_' + exam.id + '_' + studentId;
+      let previous = 0;
+      try { previous = Number(localStorage.getItem(versionKey) || 0); } catch { /* unavailable */ }
+      if (version > previous) {
+        const attemptKey = attemptStorageKey(exam.id, studentId, nisn);
+        const existing = readAttempt(attemptKey);
+        if (existing) {
+          try { localStorage.removeItem(attemptKey); } catch { /* ignore */ }
+          try {
+            const active = JSON.parse(localStorage.getItem(activeKey) || '{}');
+            if (active.examId === exam.id) localStorage.removeItem(activeKey);
+          } catch { /* ignore */ }
+          if (selectedId === exam.id) {
+            setAttempt(null);
+            if (examRoom) onExitExam();
+          }
+        }
+        try { localStorage.setItem(versionKey, String(version)); } catch { /* ignore */ }
+      } else if (!previous) {
+        try { localStorage.setItem(versionKey, String(version)); } catch { /* ignore */ }
+      }
+    });
+  }, [participantControls, exams, studentId, nisn, selectedId, examRoom, activeKey, onExitExam]);
+
+  // Enforce a teacher block immediately, even if the student is already in the room.
+  useEffect(() => {
+    if (examRoom && selectedBlocked) {
+      setOpenError('Ujian ini dibatasi oleh guru. Hubungi guru untuk membuka akses.');
+      onExitExam();
+    }
+  }, [examRoom, selectedBlocked, onExitExam]);
 
   useEffect(() => {
     setAttempt(selected && storageKey ? readAttempt(storageKey) : null);
@@ -228,7 +304,7 @@ export const StudentGoogleFormExams: React.FC<{
   }, [examRoom, storageKey]);
 
   const startExam = (exam: StudentFormExam | null | undefined = selected) => {
-    if (!exam) return;
+    if (!exam || participantControls[exam.id]?.blocked) { setOpenError('Ujian ini dibatasi oleh guru. Hubungi guru untuk membuka akses.'); return; }
     const examStorageKey = attemptStorageKey(exam.id, studentId, nisn);
     const existingAttempt = readAttempt(examStorageKey);
     if (existingAttempt) {
@@ -252,7 +328,7 @@ export const StudentGoogleFormExams: React.FC<{
   };
 
   const continueExam = (exam: StudentFormExam | null | undefined = selected) => {
-    if (!exam) return;
+    if (!exam || participantControls[exam.id]?.blocked) { setOpenError('Ujian ini dibatasi oleh guru. Hubungi guru untuk membuka akses.'); return; }
     const examAttempt = readAttempt(attemptStorageKey(exam.id, studentId, nisn));
     if (!examAttempt || examAttempt.completedAt) return;
     try { localStorage.setItem('simpatik_exam_resume_request_' + exam.id, String(Date.now())); } catch (error) { console.error('Gagal menandai lanjut ujian:', error); }
@@ -262,8 +338,8 @@ export const StudentGoogleFormExams: React.FC<{
     onEnterExam(exam.id);
   };
 
-  const finishExam = () => {
-    if (!attempt || !storageKey) return;
+  const finishExam = async () => {
+    if (!attempt || !storageKey || selectedBlocked) return;
     const next = { ...attempt, completedAt: Date.now() };
     try {
       localStorage.setItem(storageKey, JSON.stringify(next));
@@ -272,6 +348,15 @@ export const StudentGoogleFormExams: React.FC<{
       console.error('Gagal menyimpan status selesai ujian:', error);
     }
     setAttempt(next);
+    if (selected) {
+      try {
+        await updateDoc(doc(db, 'googleFormExamParticipants', selected.id + '_' + studentId), { completedAt: serverTimestamp() });
+        setParticipantControlError('');
+      } catch (error) {
+        console.error('Status selesai ujian gagal disinkronkan:', error);
+        setParticipantControlError('Status selesai tersimpan di perangkat, tetapi belum tersinkron ke SIMPATIK Utama. Periksa koneksi atau Rules.');
+      }
+    }
     window.dispatchEvent(new Event('simpatik-exam-finish'));
   };
 
@@ -280,7 +365,7 @@ export const StudentGoogleFormExams: React.FC<{
   };
 
   if (examRoom) {
-    if (loading || !selected || !attempt) return <main className="flex min-h-screen items-center justify-center bg-[#f7f9fb] p-5 text-center text-sm font-semibold text-slate-500">Menyiapkan ruang ujian SIMPATIK…</main>;
+    if (loading || !selected || !attempt || !selectedControl) return <main className="flex min-h-screen items-center justify-center bg-[#f7f9fb] p-5 text-center text-sm font-semibold text-slate-500">{participantControlError || 'Memverifikasi akses dan menyiapkan ruang ujian SIMPATIK…'}</main>;
     if (attempt.completedAt) return <main className="fixed inset-0 z-40 flex h-[100dvh] w-screen items-center justify-center overflow-auto bg-[#f7f9fb] p-5"><section className="w-full max-w-md rounded-2xl border border-blue-100 bg-white p-6 text-center shadow-sm"><CheckCircle2 className="mx-auto text-blue-600" size={42}/><h1 className="mt-3 text-xl font-black text-slate-800">Ujian telah ditandai selesai</h1><p className="mt-2 text-sm leading-6 text-slate-500">Terima kasih. Status ini merupakan konfirmasi dari siswa; SIMPATIK tidak dapat membaca tombol Kirim Google Forms secara langsung.</p><button type="button" onClick={returnToStudentPortal} className="mt-5 w-full rounded-xl bg-[#08387f] px-4 py-3 text-sm font-extrabold text-white">Kembali ke Dashboard</button></section></main>;
     return (
       <main className="fixed inset-0 z-40 h-[100dvh] w-screen overflow-hidden bg-[#f7f9fb]">
@@ -329,13 +414,13 @@ export const StudentGoogleFormExams: React.FC<{
   const getScheduleEnd = (exam: StudentFormExam) => toDate(exam.endAt)?.getTime() || 0;
   const upcomingExams = exams.filter(exam => {
     const startedAttempt = getExamAttempt(exam);
-    return !startedAttempt?.completedAt && Boolean(exam.startAt) && getScheduleStart(exam) > now;
+    return !startedAttempt?.completedAt && !participantControls[exam.id]?.completedAt && Boolean(exam.startAt) && getScheduleStart(exam) > now;
   });
-  const finishedExams = exams.filter(exam => Boolean(getExamAttempt(exam)?.completedAt));
+  const finishedExams = exams.filter(exam => Boolean(getExamAttempt(exam)?.completedAt || participantControls[exam.id]?.completedAt));
   const activeExams = exams.filter(exam => {
     const savedAttempt = getExamAttempt(exam);
     const end = getScheduleEnd(exam);
-    return !savedAttempt?.completedAt && getScheduleStart(exam) <= now && (!end || end >= now);
+    return !savedAttempt?.completedAt && !participantControls[exam.id]?.completedAt && getScheduleStart(exam) <= now && (!end || end >= now);
   });
   const visibleExams = activeTab === 'active' ? activeExams : activeTab === 'upcoming' ? upcomingExams : finishedExams;
   const formatDeadline = (value?: string) => value ? formatDate(value, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Tidak ditentukan';
@@ -433,11 +518,13 @@ export const StudentGoogleFormExams: React.FC<{
                     <p className="mt-0.5 text-[10px] text-white/75">Batas akhir</p>
                   </div>
                 </div>
-                {!examUrl ? (
+                {participantControls[exam.id]?.blocked ? (
+                  <div role="alert" className="mt-4 rounded-xl bg-rose-100 px-3 py-3 text-xs font-bold text-rose-800">Ujian diblokir oleh guru. Hubungi guru untuk meminta akses.</div>
+                ) : !examUrl ? (
                   <div role="alert" className="mt-4 rounded-xl bg-white/15 px-3 py-3 text-xs leading-5 text-white">Tautan ujian belum valid. Hubungi guru untuk memeriksanya.</div>
                 ) : (
-                  <button type="button" onClick={() => inProgress ? continueExam(exam) : startExam(exam)} className="mt-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#163665] transition-colors duration-200 hover:bg-[#f0f5fd]">
-                    {inProgress ? 'Lanjutkan Ujian' : 'Mulai Ujian'}
+                  <button type="button" onClick={() => inProgress ? continueExam(exam) : startExam(exam)} disabled={!participantControls[exam.id] || Boolean(participantControls[exam.id]?.blocked)} className="mt-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#163665] transition-colors duration-200 hover:bg-[#f0f5fd]">
+                    {!participantControls[exam.id] ? 'Memeriksa akses…' : inProgress ? 'Lanjutkan Ujian' : 'Mulai Ujian'}
                   </button>
                 )}
                 {openError && selectedId === exam.id && <p role="alert" className="mt-3 rounded-lg bg-white/15 p-3 text-xs font-semibold text-white">{openError}</p>}
@@ -490,7 +577,8 @@ export const StudentGoogleFormExams: React.FC<{
         </div>
       )}
 
-      <p className="text-[11px] leading-5 text-[#64748B]">Status dan waktu ujian disimpan di perangkat siswa. Penalti bergantung pada kemampuan browser mendeteksi perpindahan tab/aplikasi. Google Forms berasal dari layanan Google sehingga SIMPATIK tidak dapat membaca secara langsung apakah tombol Kirim sudah berhasil ditekan.</p>
+      {participantControlError && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-amber-800">{participantControlError}</p>}
+      <p className="text-[11px] leading-5 text-[#64748B]">Status pengerjaan dan kontrol peserta disinkronkan ke SIMPATIK Utama. Waktu/penalti ujian masih disimpan lokal. SIMPATIK tidak dapat membaca secara langsung apakah tombol Kirim Google Form sudah berhasil ditekan.</p>
     </div>
   );
 };

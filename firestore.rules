@@ -218,6 +218,37 @@ service cloud.firestore {
       allow create, update, delete: if isGuruOrAdmin();
     }
 
+        match /googleFormExamParticipants/{controlId} {
+      allow get: if isGuruOrAdmin()
+        || (signedIn() && resource.data.ownerUid == request.auth.uid
+          && (request.auth.token.firebase.sign_in_provider == 'anonymous'
+            || (isStudent() && resource.data.studentId == request.auth.token.studentId)));
+      allow list: if isGuruOrAdmin();
+      allow create: if isGuruOrAdmin()
+        || (signedIn()
+          && request.resource.data.ownerUid == request.auth.uid
+          && request.resource.data.blocked == false
+          && request.resource.data.resetVersion == 0
+          && request.resource.data.keys().hasOnly(['examId', 'studentId', 'ownerUid', 'blocked', 'resetVersion', 'updatedAt'])
+          && (request.auth.token.firebase.sign_in_provider == 'anonymous'
+            || (isStudent() && request.resource.data.studentId == request.auth.token.studentId)));
+      allow update: if isGuruOrAdmin()
+        || (signedIn()
+          && (!('ownerUid' in resource.data) || resource.data.ownerUid == null)
+          && request.resource.data.ownerUid == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ownerUid'])
+          && (request.auth.token.firebase.sign_in_provider == 'anonymous'
+            || (isStudent() && resource.data.studentId == request.auth.token.studentId)))
+        || (signedIn()
+          && resource.data.ownerUid == request.auth.uid
+          && request.resource.data.ownerUid == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['completedAt'])
+          && (request.resource.data.completedAt == null || request.resource.data.completedAt is timestamp)
+          && (request.auth.token.firebase.sign_in_provider == 'anonymous'
+            || (isStudent() && resource.data.studentId == request.auth.token.studentId)));
+      allow delete: if isAdmin();
+    }
+
     match /googleFormExams/{examId} {
       allow read: if isGuruOrAdmin()
         || (isStudent()
