@@ -365,7 +365,7 @@ export const StudentGoogleFormExams: React.FC<{
   };
 
   if (examRoom) {
-    if (loading || !selected || !attempt) return <main className="flex min-h-screen items-center justify-center bg-[#f7f9fb] p-5 text-center text-sm font-semibold text-slate-500">Menyiapkan ruang ujian SIMPATIK…</main>;
+    if (loading || !selected || !attempt || !selectedControl) return <main className="flex min-h-screen items-center justify-center bg-[#f7f9fb] p-5 text-center text-sm font-semibold text-slate-500">{participantControlError || 'Memverifikasi akses dan menyiapkan ruang ujian SIMPATIK…'}</main>;
     if (attempt.completedAt) return <main className="fixed inset-0 z-40 flex h-[100dvh] w-screen items-center justify-center overflow-auto bg-[#f7f9fb] p-5"><section className="w-full max-w-md rounded-2xl border border-blue-100 bg-white p-6 text-center shadow-sm"><CheckCircle2 className="mx-auto text-blue-600" size={42}/><h1 className="mt-3 text-xl font-black text-slate-800">Ujian telah ditandai selesai</h1><p className="mt-2 text-sm leading-6 text-slate-500">Terima kasih. Status ini merupakan konfirmasi dari siswa; SIMPATIK tidak dapat membaca tombol Kirim Google Forms secara langsung.</p><button type="button" onClick={returnToStudentPortal} className="mt-5 w-full rounded-xl bg-[#08387f] px-4 py-3 text-sm font-extrabold text-white">Kembali ke Dashboard</button></section></main>;
     return (
       <main className="fixed inset-0 z-40 h-[100dvh] w-screen overflow-hidden bg-[#f7f9fb]">
@@ -523,8 +523,8 @@ export const StudentGoogleFormExams: React.FC<{
                 ) : !examUrl ? (
                   <div role="alert" className="mt-4 rounded-xl bg-white/15 px-3 py-3 text-xs leading-5 text-white">Tautan ujian belum valid. Hubungi guru untuk memeriksanya.</div>
                 ) : (
-                  <button type="button" onClick={() => inProgress ? continueExam(exam) : startExam(exam)} disabled={Boolean(participantControls[exam.id]?.blocked)} className="mt-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#163665] transition-colors duration-200 hover:bg-[#f0f5fd]">
-                    {inProgress ? 'Lanjutkan Ujian' : 'Mulai Ujian'}
+                  <button type="button" onClick={() => inProgress ? continueExam(exam) : startExam(exam)} disabled={!participantControls[exam.id] || Boolean(participantControls[exam.id]?.blocked)} className="mt-4 flex min-h-12 w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#163665] transition-colors duration-200 hover:bg-[#f0f5fd]">
+                    {!participantControls[exam.id] ? 'Memeriksa akses…' : inProgress ? 'Lanjutkan Ujian' : 'Mulai Ujian'}
                   </button>
                 )}
                 {openError && selectedId === exam.id && <p role="alert" className="mt-3 rounded-lg bg-white/15 p-3 text-xs font-semibold text-white">{openError}</p>}
