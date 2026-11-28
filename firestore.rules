@@ -234,7 +234,7 @@ service cloud.firestore {
             || (isStudent() && request.resource.data.studentId == request.auth.token.studentId)));
       allow update: if isGuruOrAdmin()
         || (signedIn()
-          && (!('ownerUid' in resource.data) || resource.data.ownerUid == null)
+          && (!('ownerUid' in resource.data) || resource.data.ownerUid == null || resource.data.ownerUid == request.auth.uid)
           && request.resource.data.ownerUid == request.auth.uid
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ownerUid'])
           && (request.auth.token.firebase.sign_in_provider == 'anonymous'
